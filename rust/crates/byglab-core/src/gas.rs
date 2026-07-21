@@ -26,12 +26,21 @@ pub struct GasProperties {
     pub gamma: f64,
     /// Specific gas constant R = cp - cv, in J/(kg*K).
     pub gas_constant: f64,
+    /// Dynamic viscosity, Pa*s. Only used by `source_terms` (Reynolds
+    /// number, for wall friction and heat transfer) — the inviscid flux
+    /// physics in `riemann.rs`/`gas.rs` never reads this.
+    pub dynamic_viscosity: f64,
+    /// Prandtl number, dimensionless (cp*mu/k). Only used by
+    /// `source_terms` (Nusselt-number wall heat transfer).
+    pub prandtl_number: f64,
 }
 
 impl GasProperties {
-    /// Dry air at moderate temperature: gamma = 1.4, R = 287 J/(kg*K).
-    /// Matches the gas model used in every OpenWAM reference case.
-    pub const AIR: GasProperties = GasProperties { gamma: 1.4, gas_constant: 287.0 };
+    /// Dry air at moderate temperature: gamma = 1.4, R = 287 J/(kg*K),
+    /// dynamic viscosity 1.81e-5 Pa*s, Prandtl number 0.71. Matches the gas
+    /// model used in every OpenWAM reference case.
+    pub const AIR: GasProperties =
+        GasProperties { gamma: 1.4, gas_constant: 287.0, dynamic_viscosity: 1.81e-5, prandtl_number: 0.71 };
 }
 
 /// Flow state expressed as the physically-intuitive quantities: density,
@@ -164,20 +173,6 @@ impl std::ops::Mul<f64> for Flux {
     type Output = Flux;
     fn mul(self, scalar: f64) -> Flux {
         Flux { mass: self.mass * scalar, momentum: self.momentum * scalar, energy: self.energy * scalar }
-    }
-}
-
-impl ConservedState {
-    /// Updates this state by one explicit finite-volume step, given the
-    /// fluxes at the cell's left and right faces, the cell width, and the
-    /// timestep. This is the core update formula of the whole solver:
-    /// `dU/dt = -(F_right - F_left) / dx`, applied explicitly (forward Euler).
-    pub fn advance(&mut self, left_face_flux: Flux, right_face_flux: Flux, cell_width: f64, dt: f64) {
-        let divergence = right_face_flux - left_face_flux;
-        let scale = dt / cell_width;
-        self.mass -= divergence.mass * scale;
-        self.momentum -= divergence.momentum * scale;
-        self.energy -= divergence.energy * scale;
     }
 }
 

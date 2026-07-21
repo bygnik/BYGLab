@@ -1,15 +1,17 @@
 {
-  "gas": { "gamma": 1.4, "gas_constant": 287.0 },
+  "gas": { "gamma": 1.4, "gas_constant": 287.0, "dynamic_viscosity": 1.81e-5, "prandtl_number": 0.71 },
   "pipes": [
     {
       "length": 1.0,
-      "diameter": 0.05,
+      "diameter_left": 0.05,
+      "diameter_right": 0.05,
       "target_cell_size": 0.01,
       "initial_pressure": 150000.0,
       "initial_temperature_kelvin": 293.15,
       "initial_velocity": 0.0,
       "left_boundary": "ClosedEnd",
-      "right_boundary": "ClosedEnd"
+      "right_boundary": "ClosedEnd",
+      "wall": null
     }
   ],
   "junctions": [],

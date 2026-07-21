@@ -4,4 +4,5 @@
 //! needs this declares `mod support;` to pull it in.
 
 pub mod exact_riemann;
+pub mod isentropic_nozzle;
 pub mod sod_shock_tube_case;

@@ -93,13 +93,17 @@ impl PipeNetwork {
     /// second-order-accurate flux instead of each pipe's own boundary
     /// condition.
     pub fn advance(&mut self, dt: f64, gas: &GasProperties) {
-        let all_fluxes = self.all_face_fluxes(dt, gas);
-        for (pipe, fluxes) in self.pipes.iter_mut().zip(all_fluxes.iter()) {
-            pipe.apply_face_fluxes(fluxes, dt);
+        let (all_fluxes, all_reconstructed) = self.all_face_fluxes(dt, gas);
+        for ((pipe, fluxes), reconstructed) in self.pipes.iter_mut().zip(&all_fluxes).zip(&all_reconstructed) {
+            pipe.apply_face_fluxes(fluxes, reconstructed, dt, gas);
         }
     }
 
-    /// Every pipe's full list of face fluxes (length `cell_count + 1`).
+    /// Every pipe's full list of face fluxes (length `cell_count + 1`) and
+    /// its reconstructed cells (the latter needed by
+    /// [`crate::pipe::Pipe::apply_face_fluxes`] for the taper geometric
+    /// source term, which reuses each cell's own MUSCL-reconstructed face
+    /// pressures rather than recomputing them).
     ///
     /// Two passes: first, determine the correct neighbor state just past
     /// each pipe end (a pipe's own boundary condition by default, or the
@@ -108,7 +112,7 @@ impl PipeNetwork {
     /// pipe's own fluxes, and finally overwrite junction-coupled end faces
     /// with a flux built from *both* connected pipes' reconstructed edges
     /// (see this module's doc comment for why that second step matters).
-    fn all_face_fluxes(&self, dt: f64, gas: &GasProperties) -> Vec<Vec<Flux>> {
+    fn all_face_fluxes(&self, dt: f64, gas: &GasProperties) -> (Vec<Vec<Flux>>, Vec<Vec<ReconstructedCell>>) {
         let mut left_neighbors: Vec<PrimitiveState> =
             self.pipes.iter().map(|pipe| pipe.own_left_neighbor(gas)).collect();
         let mut right_neighbors: Vec<PrimitiveState> =
@@ -116,6 +120,7 @@ impl PipeNetwork {
 
         for junction in &self.junctions {
             let (a, b) = self.validate_junction_orientation(junction);
+            self.validate_junction_area_match(junction, a, b);
             *Self::neighbor_slot(&mut left_neighbors, &mut right_neighbors, a) = self.end_state(b, gas);
             *Self::neighbor_slot(&mut left_neighbors, &mut right_neighbors, b) = self.end_state(a, gas);
         }
@@ -144,7 +149,7 @@ impl PipeNetwork {
             Self::set_end_flux(&mut fluxes, b, shared_flux);
         }
 
-        fluxes
+        (fluxes, reconstructed)
     }
 
     /// Checks that `junction` connects a `Right` end to a `Left` end (in
@@ -161,6 +166,43 @@ impl PipeNetwork {
                  pipes' velocity sign conventions already agree; see `Junction`'s doc comment.",
                 junction.a, junction.b, junction.a.end
             ),
+        }
+    }
+
+    /// Checks that the two ends of `junction` have matching cross-sectional
+    /// area (within a small relative tolerance) — panics with a clear
+    /// message otherwise.
+    ///
+    /// Before tapered pipes existed, "same area" was structurally
+    /// guaranteed: every pipe had exactly one constant diameter, so any two
+    /// pipe ends automatically matched. A tapered pipe makes a
+    /// mismatched-area junction newly constructible by accident (e.g. two
+    /// tapered pipes with careless endpoint diameters); the junction flux
+    /// logic (a single shared HLLC flux applied to both sides, see this
+    /// module's doc comment) is only physically meaningful when both sides
+    /// already agree on the local face area, so this is checked explicitly
+    /// rather than silently producing a physically wrong result. A genuine
+    /// sudden area change at a junction (a real diffuser/nozzle) needs a
+    /// different, loss-coefficient-based treatment and is out of scope.
+    fn validate_junction_area_match(&self, junction: &Junction, a: PipeEndRef, b: PipeEndRef) {
+        let area_a = self.end_face_area(a);
+        let area_b = self.end_face_area(b);
+        let relative_difference = (area_a - area_b).abs() / area_a.max(area_b);
+        assert!(
+            relative_difference < 1e-6,
+            "Junction {{a: {:?}, b: {:?}}} connects two pipe ends with mismatched cross-sectional area \
+             ({area_a:e} m^2 vs {area_b:e} m^2) - junctions require matching area on both sides; a sudden \
+             area change at a junction needs a different (loss-coefficient-based) treatment, not implemented.",
+            junction.a, junction.b
+        );
+    }
+
+    /// The cross-sectional area at one specific pipe end's face.
+    fn end_face_area(&self, end_ref: PipeEndRef) -> f64 {
+        let face_areas = &self.pipes[end_ref.pipe_index].mesh.face_areas;
+        match end_ref.end {
+            PipeEnd::Left => face_areas[0],
+            PipeEnd::Right => face_areas[face_areas.len() - 1],
         }
     }
 
@@ -250,7 +292,7 @@ mod tests {
     fn matched_states_across_a_junction_produce_zero_net_flux() {
         let gas = GasProperties::AIR;
         let network = two_pipe_network(150_000.0, 150_000.0);
-        let fluxes = network.all_face_fluxes(1e-6, &gas);
+        let (fluxes, _) = network.all_face_fluxes(1e-6, &gas);
         let junction_flux = fluxes[0][fluxes[0].len() - 1];
         assert!(junction_flux.mass.abs() < 1e-9);
     }

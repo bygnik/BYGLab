@@ -11,6 +11,7 @@ use crate::mesh::Mesh;
 use crate::network::{Junction, PipeNetwork};
 use crate::pipe::Pipe;
 use crate::solver::run_to_time;
+use crate::source_terms::WallProperties;
 use serde::{Deserialize, Serialize};
 
 /// One pipe's geometry, initial condition, and end boundary conditions.
@@ -18,9 +19,13 @@ use serde::{Deserialize, Serialize};
 pub struct PipeSpec {
     /// Pipe length, meters.
     pub length: f64,
-    /// Pipe diameter, meters (constant along its length).
-    pub diameter: f64,
-    /// Target finite-volume cell size, meters — see [`Mesh::uniform`].
+    /// Pipe diameter at the left (x=0) end, meters.
+    pub diameter_left: f64,
+    /// Pipe diameter at the right (x=length) end, meters. Equal to
+    /// `diameter_left` for a constant-diameter pipe; a tapered pipe just
+    /// sets these two differently — see [`Mesh::tapered`].
+    pub diameter_right: f64,
+    /// Target finite-volume cell size, meters — see [`Mesh::tapered`].
     pub target_cell_size: f64,
     /// Initial pressure, Pa, uniform along the whole pipe.
     pub initial_pressure: f64,
@@ -30,6 +35,10 @@ pub struct PipeSpec {
     pub initial_velocity: f64,
     pub left_boundary: BoundaryCondition,
     pub right_boundary: BoundaryCondition,
+    /// Wall friction/heat-transfer properties. Omitted or `null` in JSON
+    /// means frictionless and adiabatic (see [`crate::pipe::Pipe::wall`]).
+    #[serde(default)]
+    pub wall: Option<WallProperties>,
 }
 
 /// A full pipe-network case: the working gas, every pipe's setup, how
@@ -76,14 +85,19 @@ pub fn run_pipe_case(config: &PipeCaseConfig) -> PipeCaseResult {
         .pipes
         .iter()
         .map(|spec| {
-            let mesh = Mesh::uniform(spec.length, spec.diameter, spec.target_cell_size);
+            let mesh = Mesh::tapered(spec.length, spec.diameter_left, spec.diameter_right, spec.target_cell_size);
             let initial_state = PrimitiveState::from_pressure_temperature(
                 spec.initial_pressure,
                 spec.initial_temperature_kelvin,
                 spec.initial_velocity,
                 &config.gas,
             );
-            Pipe::uniform_initial_state(mesh, initial_state, &config.gas, spec.left_boundary, spec.right_boundary)
+            let pipe =
+                Pipe::uniform_initial_state(mesh, initial_state, &config.gas, spec.left_boundary, spec.right_boundary);
+            match spec.wall {
+                Some(wall) => pipe.with_wall(wall),
+                None => pipe,
+            }
         })
         .collect();
 
@@ -121,13 +135,15 @@ mod tests {
             gas: GasProperties::AIR,
             pipes: vec![PipeSpec {
                 length: 1.0,
-                diameter: 0.05,
+                diameter_left: 0.05,
+                diameter_right: 0.05,
                 target_cell_size: 0.01,
                 initial_pressure: 150_000.0,
                 initial_temperature_kelvin: 293.15,
                 initial_velocity: 0.0,
                 left_boundary: BoundaryCondition::ClosedEnd,
                 right_boundary: BoundaryCondition::ClosedEnd,
+                wall: None,
             }],
             junctions: vec![],
             duration: 0.01,
@@ -150,13 +166,15 @@ mod tests {
             gas: GasProperties::AIR,
             pipes: vec![PipeSpec {
                 length: 1.0,
-                diameter: 0.05,
+                diameter_left: 0.05,
+                diameter_right: 0.05,
                 target_cell_size: 0.01,
                 initial_pressure: 101_325.0,
                 initial_temperature_kelvin: 293.15,
                 initial_velocity: 0.0,
                 left_boundary: BoundaryCondition::ClosedEnd,
                 right_boundary: BoundaryCondition::Reservoir { pressure: 101_325.0, temperature_kelvin: 293.15 },
+                wall: None,
             }],
             junctions: vec![],
             duration: 0.001,

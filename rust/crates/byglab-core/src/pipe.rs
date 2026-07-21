@@ -6,6 +6,7 @@ use crate::gas::{ConservedState, Flux, GasProperties, PrimitiveState};
 use crate::mesh::Mesh;
 use crate::reconstruction::{reconstruct_cell, ReconstructedCell};
 use crate::riemann::hllc_flux;
+use crate::source_terms::{self, WallProperties};
 use serde::{Deserialize, Serialize};
 
 /// A pipe's gas state discretized over its [`Mesh`], with a
@@ -26,11 +27,17 @@ pub struct Pipe {
     pub state: Vec<ConservedState>,
     pub left_boundary: BoundaryCondition,
     pub right_boundary: BoundaryCondition,
+    /// Wall friction/heat-transfer properties, or `None` for a
+    /// frictionless, adiabatic pipe (the default, and the only behavior
+    /// that existed before `source_terms.rs` — every pre-existing
+    /// validation case relies on this being `None`).
+    pub wall: Option<WallProperties>,
 }
 
 impl Pipe {
     /// Builds a pipe filled with the same gas state everywhere — the
     /// common case for setting up a validation/initial-condition case.
+    /// Frictionless and adiabatic by default; see [`Self::with_wall`].
     pub fn uniform_initial_state(
         mesh: Mesh,
         initial_state: PrimitiveState,
@@ -39,7 +46,13 @@ impl Pipe {
         right_boundary: BoundaryCondition,
     ) -> Self {
         let state = vec![initial_state.to_conserved(gas); mesh.cell_count()];
-        Pipe { mesh, state, left_boundary, right_boundary }
+        Pipe { mesh, state, left_boundary, right_boundary, wall: None }
+    }
+
+    /// Opts this pipe into wall friction and/or heat transfer.
+    pub fn with_wall(mut self, wall: WallProperties) -> Self {
+        self.wall = Some(wall);
+        self
     }
 
     pub fn cell_count(&self) -> usize {
@@ -132,19 +145,76 @@ impl Pipe {
 
     /// Advances every cell by one explicit timestep, given the flux at
     /// every face (length `cell_count + 1`, first and last being the two
-    /// end faces).
+    /// end faces) and each cell's reconstructed state (needed for the
+    /// taper source term below).
     ///
-    /// Unchanged by the MUSCL-Hancock upgrade: the predictor half-step is
-    /// already baked into how the face fluxes themselves were computed
-    /// (see `reconstruction.rs`), so the conservative update here is still
-    /// a single full-timestep forward-Euler-style step — see
-    /// `solver.rs`'s doc comment for why that's sufficient for full
-    /// second-order accuracy with this specific scheme.
-    pub fn apply_face_fluxes(&mut self, face_fluxes: &[Flux], dt: f64) {
+    /// The predictor half-step is already baked into how the face fluxes
+    /// themselves were computed (see `reconstruction.rs`), so the
+    /// conservative update here is still a single full-timestep
+    /// forward-Euler-style step — see `solver.rs`'s doc comment for why
+    /// that's sufficient for full second-order accuracy with this specific
+    /// scheme.
+    ///
+    /// For a constant-diameter, wall-less pipe this reduces exactly to the
+    /// original `dU/dt = -(F_right - F_left)/dx` update (face areas equal
+    /// the cell area everywhere, so area-weighting and volume-dividing
+    /// cancel, and the geometric/wall source terms are both identically
+    /// zero). For a tapered pipe, fluxes are weighted by their own face's
+    /// area before differencing, a geometric pressure-force source term
+    /// `p̄ * (A_right_face - A_left_face)` is added to momentum (`p̄` being
+    /// the average of this cell's two MUSCL-reconstructed face pressures —
+    /// the choice that makes a uniform, at-rest tapered pipe generate
+    /// exactly zero spurious velocity, see `tests/tapered_pipe_stays_at_rest.rs`),
+    /// and the whole update is divided by cell *volume* (`area * width`)
+    /// rather than just `width`. Wall friction/heat-transfer source terms
+    /// (`source_terms::wall_sources`) are added the same way when `self.wall`
+    /// is set.
+    pub fn apply_face_fluxes(
+        &mut self,
+        face_fluxes: &[Flux],
+        reconstructed_cells: &[ReconstructedCell],
+        dt: f64,
+        gas: &GasProperties,
+    ) {
         debug_assert_eq!(face_fluxes.len(), self.state.len() + 1);
+        debug_assert_eq!(reconstructed_cells.len(), self.state.len());
+
         for i in 0..self.state.len() {
-            let width = self.mesh.cells[i].width;
-            self.state[i].advance(face_fluxes[i], face_fluxes[i + 1], width, dt);
+            let cell = self.mesh.cells[i];
+            let left_face_area = self.mesh.face_areas[i];
+            let right_face_area = self.mesh.face_areas[i + 1];
+
+            let area_weighted_divergence = face_fluxes[i + 1] * right_face_area - face_fluxes[i] * left_face_area;
+
+            let mean_face_pressure =
+                0.5 * (reconstructed_cells[i].left_face.pressure + reconstructed_cells[i].right_face.pressure);
+            let geometric_momentum_source = mean_face_pressure * (right_face_area - left_face_area);
+
+            let (wall_momentum_source, wall_energy_source) = match &self.wall {
+                Some(wall) => {
+                    let diameter = 2.0 * (cell.area / std::f64::consts::PI).sqrt();
+                    source_terms::wall_sources(self.state[i].to_primitive(gas), wall, diameter, gas)
+                }
+                None => (0.0, 0.0),
+            };
+
+            let cell_volume = cell.area * cell.width;
+            let dt_over_volume = dt / cell_volume;
+
+            // The flux-divergence and geometric source terms are both in
+            // force/power units (flux * area, or pressure * area) - a
+            // total rate-of-change of the cell's *content* (U * volume),
+            // so both need dividing by volume to get dU/dt. Wall
+            // friction/heat-transfer sources are already expressed *per
+            // unit volume* (see `source_terms::wall_sources`'s doc
+            // comment) - i.e. already a dU/dt contribution - so they're
+            // scaled by `dt` alone, not `dt_over_volume` again.
+            self.state[i].mass -= area_weighted_divergence.mass * dt_over_volume;
+            self.state[i].momentum -= area_weighted_divergence.momentum * dt_over_volume;
+            self.state[i].momentum += geometric_momentum_source * dt_over_volume;
+            self.state[i].momentum += wall_momentum_source * dt;
+            self.state[i].energy -= area_weighted_divergence.energy * dt_over_volume;
+            self.state[i].energy += wall_energy_source * dt;
         }
     }
 
