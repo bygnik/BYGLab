@@ -1,8 +1,7 @@
 //! Thin wasm-bindgen wrapper around `byglab-core`. No solver logic lives
 //! here — only (de)serialization and marshalling into JS-friendly types.
 
-use byglab_core::{run as core_run, SimConfig};
-use js_sys::{Float64Array, Object, Reflect};
+use byglab_core::{run_pipe_case, PipeCaseConfig};
 use wasm_bindgen::prelude::*;
 
 /// Call once from JS before anything else, to get Rust panics forwarded to
@@ -12,17 +11,14 @@ pub fn init_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-/// Runs the (placeholder) solver for the given JSON-encoded `SimConfig` and
-/// returns `{ theta: Float64Array, value: Float64Array }`.
+/// Runs a pipe-network simulation for the given JSON-encoded
+/// [`PipeCaseConfig`] and returns the JSON-encoded [`byglab_core::PipeCaseResult`].
 #[wasm_bindgen]
 pub fn run(config_json: &str) -> Result<JsValue, JsValue> {
-    let config: SimConfig = serde_json::from_str(config_json)
-        .map_err(|e| JsValue::from_str(&format!("invalid config: {e}")))?;
+    let config: PipeCaseConfig =
+        serde_json::from_str(config_json).map_err(|e| JsValue::from_str(&format!("invalid config: {e}")))?;
 
-    let result = core_run(&config);
+    let result = run_pipe_case(&config);
 
-    let out = Object::new();
-    Reflect::set(&out, &"theta".into(), &Float64Array::from(result.theta.as_slice()))?;
-    Reflect::set(&out, &"value".into(), &Float64Array::from(result.value.as_slice()))?;
-    Ok(out.into())
+    serde_wasm_bindgen::to_value(&result).map_err(|e| JsValue::from_str(&format!("could not serialize result: {e}")))
 }

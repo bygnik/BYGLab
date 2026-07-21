@@ -1,90 +1,64 @@
-//! Placeholder solver core for the Rust/wasm integration smoke test.
+//! `byglab-core` — a 1D finite-volume gas-dynamics solver for engine intake
+//! and exhaust runners, ported (as a clean-room reimplementation, not a
+//! line-by-line translation) from the physics validated in this project's
+//! OpenWAM reference suite (`benchmarks/openwam/`).
 //!
-//! This crate is the single source of truth shared by the CLI and the wasm
-//! bindings — see `byglab-wasm` and `byglab-cli`. `run()` here is a stand-in
-//! for the eventual 1D finite-volume solver; it exists only to prove the
-//! config-in/time-series-out shape end to end before any real physics lands.
+//! # What's here
+//!
+//! A second-order MUSCL-Hancock finite-volume scheme (HLLC approximate
+//! Riemann solver fed slope-limited, half-timestep-evolved reconstructed
+//! states) for the 1D compressible Euler equations, supporting networks of
+//! pipes joined by same-area junctions. This is the foundation phase of a
+//! larger effort — 0D cylinder + combustion + valve models, multi-cylinder
+//! firing order, and branched exhaust manifolds are not implemented yet
+//! (see the root `README.md`'s roadmap section).
+//!
+//! # Module map
+//!
+//! - [`gas`] — ideal-gas thermodynamics: the state types ([`gas::PrimitiveState`],
+//!   [`gas::ConservedState`], [`gas::Flux`]) everything else is built on.
+//! - [`mesh`] — pipe discretization into finite-volume cells.
+//! - [`reconstruction`] — MUSCL slope-limited reconstruction and the
+//!   MUSCL-Hancock half-timestep predictor.
+//! - [`riemann`] — the HLLC numerical flux function.
+//! - [`boundary`] — how a pipe's end is terminated ([`boundary::BoundaryCondition`]).
+//! - [`pipe`] — a single pipe: mesh + gas state + boundary conditions.
+//! - [`network`] — multiple pipes joined by [`network::Junction`]s.
+//! - [`solver`] — the explicit time-stepping driver.
+//! - [`case`] — the serializable public API ([`case::PipeCaseConfig`]/
+//!   [`case::PipeCaseResult`]/[`case::run_pipe_case`]) that `byglab-cli` and
+//!   `byglab-wasm` bind to.
+//!
+//! # Design for WebAssembly
+//!
+//! This crate has no file or network I/O, no threads, and no `wasm-bindgen`
+//! dependency of its own — every public type is plain data (`Vec<f64>`-
+//! backed, `serde`-serializable), and [`case::run_pipe_case`] is a pure
+//! function from config to result. `byglab-wasm` wraps this crate with
+//! nothing but marshalling; `byglab-core` itself compiles and tests
+//! identically on native and `wasm32-unknown-unknown` targets.
+//!
+//! # Validation
+//!
+//! `tests/` checks this solver against the same analytically-validated
+//! cases used to validate OpenWAM itself (`benchmarks/openwam/cases/
+//! {quiescent,acoustic_resonance,sod_shock_tube}/`) — a trivial rest-state
+//! consistency check, a closed-form acoustic resonance period, and a
+//! nonlinear Riemann problem with a known exact solution.
 
-use serde::{Deserialize, Serialize};
-use std::f64::consts::TAU;
+pub mod boundary;
+pub mod case;
+pub mod gas;
+pub mod mesh;
+pub mod network;
+pub mod pipe;
+pub mod reconstruction;
+pub mod riemann;
+pub mod solver;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SimConfig {
-    pub label: String,
-    pub n_points: u32,
-    pub amplitude: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SimResult {
-    pub theta: Vec<f64>,
-    pub value: Vec<f64>,
-}
-
-/// Samples `amplitude * sin(theta)` over `n_points` evenly-spaced points
-/// covering `[0, 2*pi]` inclusive.
-pub fn run(config: &SimConfig) -> SimResult {
-    let n = config.n_points as usize;
-    if n == 0 {
-        return SimResult { theta: vec![], value: vec![] };
-    }
-    if n == 1 {
-        return SimResult { theta: vec![0.0], value: vec![0.0] };
-    }
-
-    let step = TAU / (n - 1) as f64;
-    let theta: Vec<f64> = (0..n).map(|i| i as f64 * step).collect();
-    let value: Vec<f64> = theta.iter().map(|t| config.amplitude * t.sin()).collect();
-
-    SimResult { theta, value }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn cfg(n_points: u32, amplitude: f64) -> SimConfig {
-        SimConfig { label: "test".into(), n_points, amplitude }
-    }
-
-    #[test]
-    fn length_matches_n_points() {
-        let result = run(&cfg(200, 1.0));
-        assert_eq!(result.theta.len(), 200);
-        assert_eq!(result.value.len(), 200);
-    }
-
-    #[test]
-    fn starts_and_ends_at_zero_crossing() {
-        let result = run(&cfg(200, 2.5));
-        assert!((result.theta[0] - 0.0).abs() < 1e-12);
-        assert!((result.value[0] - 0.0).abs() < 1e-9);
-        assert!((result.theta[199] - TAU).abs() < 1e-9);
-        // sin(2*pi) == 0
-        assert!((result.value[199] - 0.0).abs() < 1e-6);
-    }
-
-    #[test]
-    fn amplitude_scales_linearly() {
-        let a = run(&cfg(50, 1.0));
-        let b = run(&cfg(50, 3.0));
-        for (va, vb) in a.value.iter().zip(b.value.iter()) {
-            assert!((vb - 3.0 * va).abs() < 1e-9);
-        }
-    }
-
-    #[test]
-    fn zero_and_one_point_edge_cases_do_not_panic() {
-        assert_eq!(run(&cfg(0, 1.0)).theta.len(), 0);
-        assert_eq!(run(&cfg(1, 1.0)).theta.len(), 1);
-    }
-
-    #[test]
-    fn config_round_trips_through_json() {
-        let config = cfg(10, 1.5);
-        let json = serde_json::to_string(&config).unwrap();
-        let back: SimConfig = serde_json::from_str(&json).unwrap();
-        assert_eq!(back.n_points, 10);
-        assert!((back.amplitude - 1.5).abs() < 1e-12);
-    }
-}
+pub use boundary::BoundaryCondition;
+pub use case::{run_pipe_case, PipeCaseConfig, PipeCaseResult, PipeResult, PipeSpec};
+pub use gas::{ConservedState, Flux, GasProperties, PrimitiveState};
+pub use mesh::{Cell, Mesh};
+pub use network::{Junction, PipeEnd, PipeEndRef, PipeNetwork};
+pub use pipe::Pipe;
