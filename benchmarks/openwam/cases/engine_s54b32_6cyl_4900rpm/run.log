@@ -1,0 +1,1800 @@
+=======================
+ OpenWAM v2.2 build 0
+=======================
+
+THE MODEL IS READING THE INPUT DATA
+
+Number of pipes: 15
+INFO: Pipe n. 1 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 2 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 3 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 4 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 5 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 6 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 7 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 8 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 9 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 10 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 11 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 12 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 13 - N. of cells 36 - Mesh size = 0.01 m.
+INFO: Pipe n. 14 - N. of cells 31 - Mesh size = 0.01 m.
+INFO: Pipe n. 15 - N. of cells 51 - Mesh size = 0.01 m.
+Number of boundary condition: 22
+INFO: The input file data has been readed correctly
+
+INFO: File successfully deleted
+
+ Seconds since 1 / 1 / 1970 GMT :  1784603922 
+  Thousandths of a second : 990 
+ INFO: End of Gas-exchange process in cylinder 1
+____________________________________________________
+INFO: Intake mass:         0 (g)
+INFO: Exhaust mass:        0 (g)
+INFO: Trapped mass:        0.539353 (g)
+INFO: Pressure at I.C.:    1.05 (bar)
+INFO: Fuel mass:           36.9286 (mg)
+____________________________________________________
+
+===================================
+Progress : 1.01981% 
+-----------------------------------
+Time left to the end: 0:00:07,570 
+===================================
+
+
+===================================
+Progress : 2.03961% 
+-----------------------------------
+Time left to the end: 0:00:04,082 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 2
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    0.909792 (bar)
+INFO: Calculated temperature at E.O.: 49.0611 (°C)
+____________________________________________________
+
+
+===================================
+Progress : 3.01863% 
+-----------------------------------
+Time left to the end: 0:00:03,019 
+===================================
+
+
+===================================
+Progress : 4.03844% 
+-----------------------------------
+Time left to the end: 0:00:02,447 
+===================================
+
+
+===================================
+Progress : 5.01745% 
+-----------------------------------
+Time left to the end: 0:00:02,120 
+===================================
+
+
+===================================
+Progress : 6.03726% 
+-----------------------------------
+Time left to the end: 0:00:01,898 
+===================================
+
+
+===================================
+Progress : 7.01627% 
+-----------------------------------
+Time left to the end: 0:00:01,736 
+===================================
+
+
+===================================
+Progress : 8.03608% 
+-----------------------------------
+Time left to the end: 0:00:01,602 
+===================================
+
+
+===================================
+Progress : 9.0151% 
+-----------------------------------
+Time left to the end: 0:00:01,503 
+===================================
+
+
+===================================
+Progress : 10.0349% 
+-----------------------------------
+Time left to the end: 0:00:01,416 
+===================================
+
+
+===================================
+Progress : 11.0139% 
+-----------------------------------
+Time left to the end: 0:00:01,349 
+===================================
+
+
+===================================
+Progress : 12.0337% 
+-----------------------------------
+Time left to the end: 0:00:01,286 
+===================================
+
+
+===================================
+Progress : 13.0127% 
+-----------------------------------
+Time left to the end: 0:00:01,236 
+===================================
+
+
+===================================
+Progress : 14.0325% 
+-----------------------------------
+Time left to the end: 0:00:01,194 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 5
+____________________________________________________
+INFO: Intake mass:         0.0785799 (g)
+INFO: Exhaust mass:        0 (g)
+INFO: Trapped mass:        0.617332 (g)
+INFO: Pressure at I.C.:    1.36105 (bar)
+INFO: Fuel mass:           42.2677 (mg)
+____________________________________________________
+
+===================================
+Progress : 15.0116% 
+-----------------------------------
+Time left to the end: 0:00:01,160 
+===================================
+
+
+===================================
+Progress : 16.0314% 
+-----------------------------------
+Time left to the end: 0:00:01,120 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 4
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    0.96025 (bar)
+INFO: Calculated temperature at E.O.: 72.892 (°C)
+____________________________________________________
+
+
+===================================
+Progress : 17.0104% 
+-----------------------------------
+Time left to the end: 0:00:01,097 
+===================================
+
+WARNING: Cylinder 1 does not have enough air at CrankAngle 28.369729
+
+===================================
+Progress : 18.0302% 
+-----------------------------------
+Time left to the end: 0:00:01,077 
+===================================
+
+
+===================================
+Progress : 19.0092% 
+-----------------------------------
+Time left to the end: 0:00:01,052 
+===================================
+
+
+===================================
+Progress : 20.029% 
+-----------------------------------
+Time left to the end: 0:00:01,022 
+===================================
+
+
+===================================
+Progress : 21.008% 
+-----------------------------------
+Time left to the end: 0:00:00,996 
+===================================
+
+
+===================================
+Progress : 22.0278% 
+-----------------------------------
+Time left to the end: 0:00:00,973 
+===================================
+
+
+===================================
+Progress : 23.0093% 
+-----------------------------------
+Time left to the end: 0:00:00,950 
+===================================
+
+
+===================================
+Progress : 24.0291% 
+-----------------------------------
+Time left to the end: 0:00:00,929 
+===================================
+
+
+===================================
+Progress : 25.0081% 
+-----------------------------------
+Time left to the end: 0:00:00,908 
+===================================
+
+
+===================================
+Progress : 26.0279% 
+-----------------------------------
+Time left to the end: 0:00:00,886 
+===================================
+
+
+===================================
+Progress : 27.007% 
+-----------------------------------
+Time left to the end: 0:00:00,870 
+===================================
+
+
+===================================
+Progress : 28.0268% 
+-----------------------------------
+Time left to the end: 0:00:00,852 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 3
+____________________________________________________
+INFO: Intake mass:         0.589295 (g)
+INFO: Exhaust mass:        0.00898553 (g)
+INFO: Trapped mass:        0.653225 (g)
+INFO: Pressure at I.C.:    1.43725 (bar)
+INFO: Fuel mass:           44.7252 (mg)
+____________________________________________________
+
+===================================
+Progress : 29.0058% 
+-----------------------------------
+Time left to the end: 0:00:00,834 
+===================================
+
+
+===================================
+Progress : 30.0256% 
+-----------------------------------
+Time left to the end: 0:00:00,818 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 1
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    4.83256 (bar)
+INFO: Calculated temperature at E.O.: 1410 (°C)
+____________________________________________________
+
+
+===================================
+Progress : 31.0046% 
+-----------------------------------
+Time left to the end: 0:00:00,803 
+===================================
+
+WARNING: Cylinder 5 does not have enough air at CrankAngle 27.634381
+
+===================================
+Progress : 32.0244% 
+-----------------------------------
+Time left to the end: 0:00:00,789 
+===================================
+
+
+===================================
+Progress : 33.0034% 
+-----------------------------------
+Time left to the end: 0:00:00,775 
+===================================
+
+
+===================================
+Progress : 34.0232% 
+-----------------------------------
+Time left to the end: 0:00:00,762 
+===================================
+
+
+===================================
+Progress : 35.0022% 
+-----------------------------------
+Time left to the end: 0:00:00,748 
+===================================
+
+
+===================================
+Progress : 36.022% 
+-----------------------------------
+Time left to the end: 0:00:00,733 
+===================================
+
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+
+===================================
+Progress : 37.0011% 
+-----------------------------------
+Time left to the end: 0:00:00,721 
+===================================
+
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+
+===================================
+Progress : 38.0209% 
+-----------------------------------
+Time left to the end: 0:00:00,709 
+===================================
+
+
+===================================
+Progress : 39.0407% 
+-----------------------------------
+Time left to the end: 0:00:00,697 
+===================================
+
+
+===================================
+Progress : 40.0197% 
+-----------------------------------
+Time left to the end: 0:00:00,687 
+===================================
+
+
+===================================
+Progress : 41.0395% 
+-----------------------------------
+Time left to the end: 0:00:00,676 
+===================================
+
+
+===================================
+Progress : 42.0185% 
+-----------------------------------
+Time left to the end: 0:00:00,665 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 6
+____________________________________________________
+INFO: Intake mass:         0.631087 (g)
+INFO: Exhaust mass:        -0.520437 (g)
+INFO: Trapped mass:        0.646475 (g)
+INFO: Pressure at I.C.:    1.41914 (bar)
+INFO: Fuel mass:           nan (mg)
+____________________________________________________
+
+===================================
+Progress : 43.0383% 
+-----------------------------------
+Time left to the end: 0:00:00,655 
+===================================
+
+
+===================================
+Progress : 44.0173% 
+-----------------------------------
+Time left to the end: 0:00:00,644 
+===================================
+
+
+===================================
+Progress : 45.0371% 
+-----------------------------------
+Time left to the end: 0:00:00,632 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 5
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    5.63056 (bar)
+INFO: Calculated temperature at E.O.: 1442.05 (°C)
+____________________________________________________
+
+
+===================================
+Progress : 46.0162% 
+-----------------------------------
+Time left to the end: 0:00:00,621 
+===================================
+
+WARNING: Cylinder 3 does not have enough air at CrankAngle 27.563723
+
+===================================
+Progress : 47.036% 
+-----------------------------------
+Time left to the end: 0:00:00,609 
+===================================
+
+
+===================================
+Progress : 48.015% 
+-----------------------------------
+Time left to the end: 0:00:00,597 
+===================================
+
+
+===================================
+Progress : 49.0348% 
+-----------------------------------
+Time left to the end: 0:00:00,586 
+===================================
+
+
+===================================
+Progress : 50.0138% 
+-----------------------------------
+Time left to the end: 0:00:00,574 
+===================================
+
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+
+===================================
+Progress : 51.0336% 
+-----------------------------------
+Time left to the end: 0:00:00,565 
+===================================
+
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+Sonic condition in boundary: 19
+
+===================================
+Progress : 52.0126% 
+-----------------------------------
+Time left to the end: 0:00:00,554 
+===================================
+
+
+===================================
+Progress : 53.0324% 
+-----------------------------------
+Time left to the end: 0:00:00,545 
+===================================
+
+
+===================================
+Progress : 54.0115% 
+-----------------------------------
+Time left to the end: 0:00:00,535 
+===================================
+
+
+===================================
+Progress : 55.031% 
+-----------------------------------
+Time left to the end: 0:00:00,524 
+===================================
+
+
+===================================
+Progress : 56.0035% 
+-----------------------------------
+Time left to the end: 0:00:00,513 
+===================================
+
+
+===================================
+Progress : 57.0373% 
+-----------------------------------
+Time left to the end: 0:00:00,503 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 2
+____________________________________________________
+INFO: Intake mass:         0.618295 (g)
+INFO: Exhaust mass:        -0.509274 (g)
+INFO: Trapped mass:        0.644061 (g)
+INFO: Pressure at I.C.:    1.4189 (bar)
+INFO: Fuel mass:           nan (mg)
+____________________________________________________
+
+===================================
+Progress : 58.0274% 
+-----------------------------------
+Time left to the end: 0:00:00,494 
+===================================
+
+
+===================================
+Progress : 59.0157% 
+-----------------------------------
+Time left to the end: 0:00:00,482 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 3
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    5.95973 (bar)
+INFO: Calculated temperature at E.O.: 1442.42 (°C)
+____________________________________________________
+
+
+===================================
+Progress : 60.031% 
+-----------------------------------
+Time left to the end: 0:00:00,472 
+===================================
+
+
+===================================
+Progress : 61.0043% 
+-----------------------------------
+Time left to the end: 0:00:00,460 
+===================================
+
+
+===================================
+Progress : 62.0155% 
+-----------------------------------
+Time left to the end: 0:00:00,449 
+===================================
+
+
+===================================
+Progress : 63.0187% 
+-----------------------------------
+Time left to the end: 0:00:00,438 
+===================================
+
+
+===================================
+Progress : 64.0186% 
+-----------------------------------
+Time left to the end: 0:00:00,427 
+===================================
+
+
+===================================
+Progress : 65.0055% 
+-----------------------------------
+Time left to the end: 0:00:00,416 
+===================================
+
+Supersonic flow in pipe: 8 node: 34, Mach = 1.004840
+Supersonic flow in pipe: 8 node: 33, Mach = 1.001167
+Supersonic flow in pipe: 8 node: 34, Mach = 1.014984
+Supersonic flow in pipe: 8 node: 33, Mach = 1.005039
+Supersonic flow in pipe: 8 node: 34, Mach = 1.024140
+Supersonic flow in pipe: 8 node: 33, Mach = 1.005049
+Supersonic flow in pipe: 8 node: 34, Mach = 1.024166
+Supersonic flow in pipe: 8 node: 33, Mach = 1.007328
+Supersonic flow in pipe: 8 node: 34, Mach = 1.029706
+Supersonic flow in pipe: 8 node: 33, Mach = 1.010421
+Supersonic flow in pipe: 8 node: 34, Mach = 1.037353
+Supersonic flow in pipe: 8 node: 33, Mach = 1.013100
+Supersonic flow in pipe: 8 node: 34, Mach = 1.044192
+Supersonic flow in pipe: 8 node: 33, Mach = 1.013124
+Supersonic flow in pipe: 8 node: 34, Mach = 1.044253
+Supersonic flow in pipe: 8 node: 33, Mach = 1.014675
+Supersonic flow in pipe: 8 node: 34, Mach = 1.048368
+Supersonic flow in pipe: 8 node: 33, Mach = 1.016754
+Supersonic flow in pipe: 8 node: 34, Mach = 1.053982
+Supersonic flow in pipe: 8 node: 33, Mach = 1.018521
+Supersonic flow in pipe: 8 node: 34, Mach = 1.058922
+Supersonic flow in pipe: 8 node: 33, Mach = 1.018544
+Supersonic flow in pipe: 8 node: 34, Mach = 1.058991
+Supersonic flow in pipe: 8 node: 33, Mach = 1.019547
+Supersonic flow in pipe: 8 node: 34, Mach = 1.061906
+Supersonic flow in pipe: 8 node: 33, Mach = 1.020869
+Supersonic flow in pipe: 8 node: 34, Mach = 1.065798
+Supersonic flow in pipe: 8 node: 33, Mach = 1.021965
+Supersonic flow in pipe: 8 node: 34, Mach = 1.069137
+Supersonic flow in pipe: 8 node: 33, Mach = 1.021983
+Supersonic flow in pipe: 8 node: 34, Mach = 1.069198
+Supersonic flow in pipe: 8 node: 33, Mach = 1.022584
+Supersonic flow in pipe: 8 node: 34, Mach = 1.071141
+Supersonic flow in pipe: 8 node: 33, Mach = 1.023352
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073687
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.023958
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075827
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.023969
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075874
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024281
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077087
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024658
+Supersonic flow in pipe: 8 node: 34, Mach = 1.078623
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024924
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079869
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024930
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079905
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025042
+Supersonic flow in pipe: 8 node: 34, Mach = 1.080611
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025154
+Supersonic flow in pipe: 8 node: 34, Mach = 1.081497
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025188
+Supersonic flow in pipe: 8 node: 34, Mach = 1.082262
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025187
+Supersonic flow in pipe: 8 node: 34, Mach = 1.082297
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025158
+Supersonic flow in pipe: 8 node: 34, Mach = 1.082870
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025058
+Supersonic flow in pipe: 8 node: 34, Mach = 1.083957
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024865
+Supersonic flow in pipe: 8 node: 34, Mach = 1.083109
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024857
+Supersonic flow in pipe: 8 node: 34, Mach = 1.083073
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024738
+Supersonic flow in pipe: 8 node: 34, Mach = 1.082493
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024585
+Supersonic flow in pipe: 8 node: 34, Mach = 1.081665
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024452
+Supersonic flow in pipe: 8 node: 34, Mach = 1.080859
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024446
+Supersonic flow in pipe: 8 node: 34, Mach = 1.080822
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024365
+Supersonic flow in pipe: 8 node: 34, Mach = 1.080287
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024272
+Supersonic flow in pipe: 8 node: 34, Mach = 1.080859
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024161
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079977
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024157
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079934
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024104
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079368
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024057
+Supersonic flow in pipe: 8 node: 34, Mach = 1.078589
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024043
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077873
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024043
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077835
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024054
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077386
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024096
+Supersonic flow in pipe: 8 node: 34, Mach = 1.076778
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024165
+Supersonic flow in pipe: 8 node: 34, Mach = 1.076230
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024169
+Supersonic flow in pipe: 8 node: 34, Mach = 1.076199
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024220
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075859
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024303
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075997
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024384
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075515
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024390
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075485
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024462
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075179
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024604
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074764
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024804
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074397
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.024819
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074374
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025000
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074161
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025357
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073897
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025859
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073618
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.025907
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073599
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.026380
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073453
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.027243
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073682
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.028312
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073664
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.028414
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073669
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.029289
+Supersonic flow in pipe: 8 node: 34, Mach = 1.073764
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.030693
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074072
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.032244
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074596
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.032393
+Supersonic flow in pipe: 8 node: 34, Mach = 1.074653
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.033554
+Supersonic flow in pipe: 8 node: 34, Mach = 1.075149
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.035278
+Supersonic flow in pipe: 8 node: 34, Mach = 1.076044
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.037046
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077138
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.037225
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077255
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.000936
+Supersonic flow in pipe: 8 node: 33, Mach = 1.038474
+Supersonic flow in pipe: 8 node: 34, Mach = 1.078122
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.002768
+Supersonic flow in pipe: 8 node: 33, Mach = 1.040243
+Supersonic flow in pipe: 8 node: 34, Mach = 1.079770
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.004556
+Supersonic flow in pipe: 8 node: 33, Mach = 1.041973
+Supersonic flow in pipe: 8 node: 34, Mach = 1.081221
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.004744
+Supersonic flow in pipe: 8 node: 33, Mach = 1.042154
+Supersonic flow in pipe: 8 node: 34, Mach = 1.081378
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.005968
+Supersonic flow in pipe: 8 node: 33, Mach = 1.043339
+Supersonic flow in pipe: 8 node: 34, Mach = 1.082436
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.000523
+Supersonic flow in pipe: 8 node: 32, Mach = 1.007673
+Supersonic flow in pipe: 8 node: 33, Mach = 1.044979
+Supersonic flow in pipe: 8 node: 34, Mach = 1.084003
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.002082
+Supersonic flow in pipe: 8 node: 32, Mach = 1.009331
+Supersonic flow in pipe: 8 node: 33, Mach = 1.046557
+Supersonic flow in pipe: 8 node: 34, Mach = 1.085568
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.002254
+Supersonic flow in pipe: 8 node: 32, Mach = 1.009512
+Supersonic flow in pipe: 8 node: 33, Mach = 1.046729
+Supersonic flow in pipe: 8 node: 34, Mach = 1.085738
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.003338
+Supersonic flow in pipe: 8 node: 32, Mach = 1.010650
+Supersonic flow in pipe: 8 node: 33, Mach = 1.047797
+Supersonic flow in pipe: 8 node: 34, Mach = 1.086806
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.004860
+Supersonic flow in pipe: 8 node: 32, Mach = 1.012231
+Supersonic flow in pipe: 8 node: 33, Mach = 1.049259
+Supersonic flow in pipe: 8 node: 34, Mach = 1.088307
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.006367
+Supersonic flow in pipe: 8 node: 32, Mach = 1.013778
+Supersonic flow in pipe: 8 node: 33, Mach = 1.050659
+Supersonic flow in pipe: 8 node: 34, Mach = 1.089762
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.006548
+Supersonic flow in pipe: 8 node: 32, Mach = 1.013962
+Supersonic flow in pipe: 8 node: 33, Mach = 1.050824
+Supersonic flow in pipe: 8 node: 34, Mach = 1.089928
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.007606
+Supersonic flow in pipe: 8 node: 32, Mach = 1.015037
+Supersonic flow in pipe: 8 node: 33, Mach = 1.051774
+Supersonic flow in pipe: 8 node: 34, Mach = 1.090878
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.001198
+Supersonic flow in pipe: 8 node: 31, Mach = 1.009095
+Supersonic flow in pipe: 8 node: 32, Mach = 1.016538
+Supersonic flow in pipe: 8 node: 33, Mach = 1.053075
+Supersonic flow in pipe: 8 node: 34, Mach = 1.092498
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.002728
+Supersonic flow in pipe: 8 node: 31, Mach = 1.010581
+Supersonic flow in pipe: 8 node: 32, Mach = 1.018020
+Supersonic flow in pipe: 8 node: 33, Mach = 1.054327
+Supersonic flow in pipe: 8 node: 34, Mach = 1.093667
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.002924
+Supersonic flow in pipe: 8 node: 31, Mach = 1.010770
+Supersonic flow in pipe: 8 node: 32, Mach = 1.018207
+Supersonic flow in pipe: 8 node: 33, Mach = 1.054483
+Supersonic flow in pipe: 8 node: 34, Mach = 1.093805
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.004023
+Supersonic flow in pipe: 8 node: 31, Mach = 1.011824
+Supersonic flow in pipe: 8 node: 32, Mach = 1.019249
+Supersonic flow in pipe: 8 node: 33, Mach = 1.055343
+Supersonic flow in pipe: 8 node: 34, Mach = 1.094532
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.005591
+Supersonic flow in pipe: 8 node: 31, Mach = 1.013314
+Supersonic flow in pipe: 8 node: 32, Mach = 1.020711
+Supersonic flow in pipe: 8 node: 33, Mach = 1.056532
+Supersonic flow in pipe: 8 node: 34, Mach = 1.095499
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.007185
+Supersonic flow in pipe: 8 node: 31, Mach = 1.014811
+Supersonic flow in pipe: 8 node: 32, Mach = 1.022166
+Supersonic flow in pipe: 8 node: 33, Mach = 1.057696
+Supersonic flow in pipe: 8 node: 34, Mach = 1.096396
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.007398
+Supersonic flow in pipe: 8 node: 31, Mach = 1.015009
+Supersonic flow in pipe: 8 node: 32, Mach = 1.022358
+Supersonic flow in pipe: 8 node: 33, Mach = 1.057847
+Supersonic flow in pipe: 8 node: 34, Mach = 1.096502
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.008550
+Supersonic flow in pipe: 8 node: 31, Mach = 1.016081
+Supersonic flow in pipe: 8 node: 32, Mach = 1.023392
+Supersonic flow in pipe: 8 node: 33, Mach = 1.058660
+Supersonic flow in pipe: 8 node: 34, Mach = 1.097021
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.010188
+Supersonic flow in pipe: 8 node: 31, Mach = 1.017603
+Supersonic flow in pipe: 8 node: 32, Mach = 1.024847
+Supersonic flow in pipe: 8 node: 33, Mach = 1.059794
+Supersonic flow in pipe: 8 node: 34, Mach = 1.097701
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.011847
+Supersonic flow in pipe: 8 node: 31, Mach = 1.019150
+Supersonic flow in pipe: 8 node: 32, Mach = 1.026308
+Supersonic flow in pipe: 8 node: 33, Mach = 1.060920
+Supersonic flow in pipe: 8 node: 34, Mach = 1.098331
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.012084
+Supersonic flow in pipe: 8 node: 31, Mach = 1.019372
+Supersonic flow in pipe: 8 node: 32, Mach = 1.026515
+Supersonic flow in pipe: 8 node: 33, Mach = 1.061079
+Supersonic flow in pipe: 8 node: 34, Mach = 1.098406
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.013282
+Supersonic flow in pipe: 8 node: 31, Mach = 1.020498
+Supersonic flow in pipe: 8 node: 32, Mach = 1.027567
+Supersonic flow in pipe: 8 node: 33, Mach = 1.061882
+Supersonic flow in pipe: 8 node: 34, Mach = 1.098726
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.014969
+Supersonic flow in pipe: 8 node: 31, Mach = 1.022100
+Supersonic flow in pipe: 8 node: 32, Mach = 1.029053
+Supersonic flow in pipe: 8 node: 33, Mach = 1.063012
+Supersonic flow in pipe: 8 node: 34, Mach = 1.099153
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.016660
+Supersonic flow in pipe: 8 node: 31, Mach = 1.023735
+Supersonic flow in pipe: 8 node: 32, Mach = 1.030558
+Supersonic flow in pipe: 8 node: 33, Mach = 1.064153
+Supersonic flow in pipe: 8 node: 34, Mach = 1.099743
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.000107
+Supersonic flow in pipe: 8 node: 30, Mach = 1.016909
+Supersonic flow in pipe: 8 node: 31, Mach = 1.023980
+Supersonic flow in pipe: 8 node: 32, Mach = 1.030782
+Supersonic flow in pipe: 8 node: 33, Mach = 1.064322
+Supersonic flow in pipe: 8 node: 34, Mach = 1.099782
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.000674
+Supersonic flow in pipe: 8 node: 30, Mach = 1.018112
+Supersonic flow in pipe: 8 node: 31, Mach = 1.025176
+Supersonic flow in pipe: 8 node: 32, Mach = 1.031878
+Supersonic flow in pipe: 8 node: 33, Mach = 1.065147
+Supersonic flow in pipe: 8 node: 34, Mach = 1.099923
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.001236
+Supersonic flow in pipe: 8 node: 30, Mach = 1.019769
+Supersonic flow in pipe: 8 node: 31, Mach = 1.026876
+Supersonic flow in pipe: 8 node: 32, Mach = 1.033432
+Supersonic flow in pipe: 8 node: 33, Mach = 1.066315
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100137
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.001467
+Supersonic flow in pipe: 8 node: 30, Mach = 1.021377
+Supersonic flow in pipe: 8 node: 31, Mach = 1.028608
+Supersonic flow in pipe: 8 node: 32, Mach = 1.035016
+Supersonic flow in pipe: 8 node: 33, Mach = 1.067505
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100374
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.001462
+Supersonic flow in pipe: 8 node: 30, Mach = 1.021616
+Supersonic flow in pipe: 8 node: 31, Mach = 1.028875
+Supersonic flow in pipe: 8 node: 32, Mach = 1.035260
+Supersonic flow in pipe: 8 node: 33, Mach = 1.067690
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100393
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.001327
+Supersonic flow in pipe: 8 node: 30, Mach = 1.022714
+Supersonic flow in pipe: 8 node: 31, Mach = 1.030139
+Supersonic flow in pipe: 8 node: 32, Mach = 1.036423
+Supersonic flow in pipe: 8 node: 33, Mach = 1.068565
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100438
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 29, Mach = 1.000759
+Supersonic flow in pipe: 8 node: 30, Mach = 1.024148
+Supersonic flow in pipe: 8 node: 31, Mach = 1.031914
+Supersonic flow in pipe: 8 node: 32, Mach = 1.038070
+Supersonic flow in pipe: 8 node: 33, Mach = 1.069804
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100668
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.025437
+Supersonic flow in pipe: 8 node: 31, Mach = 1.033702
+Supersonic flow in pipe: 8 node: 32, Mach = 1.039754
+Supersonic flow in pipe: 8 node: 33, Mach = 1.071073
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100848
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.025627
+Supersonic flow in pipe: 8 node: 31, Mach = 1.033992
+Supersonic flow in pipe: 8 node: 32, Mach = 1.040029
+Supersonic flow in pipe: 8 node: 33, Mach = 1.071284
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100862
+
+===================================
+Progress : 66.0352% 
+-----------------------------------
+Time left to the end: 0:00:00,405 
+===================================
+
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.026409
+Supersonic flow in pipe: 8 node: 31, Mach = 1.035280
+Supersonic flow in pipe: 8 node: 32, Mach = 1.041270
+Supersonic flow in pipe: 8 node: 33, Mach = 1.072226
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100868
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027289
+Supersonic flow in pipe: 8 node: 31, Mach = 1.037050
+Supersonic flow in pipe: 8 node: 32, Mach = 1.043022
+Supersonic flow in pipe: 8 node: 33, Mach = 1.073558
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100963
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027871
+Supersonic flow in pipe: 8 node: 31, Mach = 1.038783
+Supersonic flow in pipe: 8 node: 32, Mach = 1.044807
+Supersonic flow in pipe: 8 node: 33, Mach = 1.074927
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101163
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027928
+Supersonic flow in pipe: 8 node: 31, Mach = 1.039068
+Supersonic flow in pipe: 8 node: 32, Mach = 1.045109
+Supersonic flow in pipe: 8 node: 33, Mach = 1.075165
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101174
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.028066
+Supersonic flow in pipe: 8 node: 31, Mach = 1.040270
+Supersonic flow in pipe: 8 node: 32, Mach = 1.046420
+Supersonic flow in pipe: 8 node: 33, Mach = 1.076186
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101157
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027897
+Supersonic flow in pipe: 8 node: 31, Mach = 1.041848
+Supersonic flow in pipe: 8 node: 32, Mach = 1.048253
+Supersonic flow in pipe: 8 node: 33, Mach = 1.077624
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101241
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027233
+Supersonic flow in pipe: 8 node: 31, Mach = 1.043291
+Supersonic flow in pipe: 8 node: 32, Mach = 1.050098
+Supersonic flow in pipe: 8 node: 33, Mach = 1.079098
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101458
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.027049
+Supersonic flow in pipe: 8 node: 31, Mach = 1.043521
+Supersonic flow in pipe: 8 node: 32, Mach = 1.050417
+Supersonic flow in pipe: 8 node: 33, Mach = 1.079362
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101470
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.026117
+Supersonic flow in pipe: 8 node: 31, Mach = 1.044424
+Supersonic flow in pipe: 8 node: 32, Mach = 1.051750
+Supersonic flow in pipe: 8 node: 33, Mach = 1.080459
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101445
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.024308
+Supersonic flow in pipe: 8 node: 31, Mach = 1.045469
+Supersonic flow in pipe: 8 node: 32, Mach = 1.053575
+Supersonic flow in pipe: 8 node: 33, Mach = 1.081988
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101541
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.021791
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046243
+Supersonic flow in pipe: 8 node: 32, Mach = 1.055362
+Supersonic flow in pipe: 8 node: 33, Mach = 1.083539
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101799
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.021227
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046344
+Supersonic flow in pipe: 8 node: 32, Mach = 1.055679
+Supersonic flow in pipe: 8 node: 33, Mach = 1.083829
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101818
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.018772
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046640
+Supersonic flow in pipe: 8 node: 32, Mach = 1.056927
+Supersonic flow in pipe: 8 node: 33, Mach = 1.084973
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101798
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.014730
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046703
+Supersonic flow in pipe: 8 node: 32, Mach = 1.058564
+Supersonic flow in pipe: 8 node: 33, Mach = 1.086540
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101921
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.009822
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046291
+Supersonic flow in pipe: 8 node: 32, Mach = 1.060073
+Supersonic flow in pipe: 8 node: 33, Mach = 1.088099
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102228
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.008763
+Supersonic flow in pipe: 8 node: 31, Mach = 1.046141
+Supersonic flow in pipe: 8 node: 32, Mach = 1.060335
+Supersonic flow in pipe: 8 node: 33, Mach = 1.088395
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102256
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 30, Mach = 1.004448
+Supersonic flow in pipe: 8 node: 31, Mach = 1.045395
+Supersonic flow in pipe: 8 node: 32, Mach = 1.061295
+Supersonic flow in pipe: 8 node: 33, Mach = 1.089514
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102241
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.043855
+Supersonic flow in pipe: 8 node: 32, Mach = 1.062429
+Supersonic flow in pipe: 8 node: 33, Mach = 1.091005
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102383
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.041625
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063291
+Supersonic flow in pipe: 8 node: 33, Mach = 1.092430
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102728
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.041083
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063413
+Supersonic flow in pipe: 8 node: 33, Mach = 1.092698
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102761
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.038832
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063770
+Supersonic flow in pipe: 8 node: 33, Mach = 1.093663
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102727
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.035098
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063928
+Supersonic flow in pipe: 8 node: 33, Mach = 1.094874
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102838
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.030514
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063625
+Supersonic flow in pipe: 8 node: 33, Mach = 1.095931
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103162
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.029440
+Supersonic flow in pipe: 8 node: 32, Mach = 1.063486
+Supersonic flow in pipe: 8 node: 33, Mach = 1.096120
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103190
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.025330
+Supersonic flow in pipe: 8 node: 32, Mach = 1.062829
+Supersonic flow in pipe: 8 node: 33, Mach = 1.096731
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103083
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.019003
+Supersonic flow in pipe: 8 node: 32, Mach = 1.061453
+Supersonic flow in pipe: 8 node: 33, Mach = 1.097363
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103079
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.011761
+Supersonic flow in pipe: 8 node: 32, Mach = 1.059431
+Supersonic flow in pipe: 8 node: 33, Mach = 1.097719
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103284
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.010091
+Supersonic flow in pipe: 8 node: 32, Mach = 1.058894
+Supersonic flow in pipe: 8 node: 33, Mach = 1.097744
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103284
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 31, Mach = 1.003995
+Supersonic flow in pipe: 8 node: 32, Mach = 1.056805
+Supersonic flow in pipe: 8 node: 33, Mach = 1.097722
+Supersonic flow in pipe: 8 node: 34, Mach = 1.103016
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.053342
+Supersonic flow in pipe: 8 node: 33, Mach = 1.097374
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102769
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.049069
+Supersonic flow in pipe: 8 node: 33, Mach = 1.096598
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102721
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.048003
+Supersonic flow in pipe: 8 node: 33, Mach = 1.096353
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102662
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.044123
+Supersonic flow in pipe: 8 node: 33, Mach = 1.095357
+Supersonic flow in pipe: 8 node: 34, Mach = 1.102135
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.038175
+Supersonic flow in pipe: 8 node: 33, Mach = 1.093563
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101514
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.031351
+Supersonic flow in pipe: 8 node: 33, Mach = 1.091178
+Supersonic flow in pipe: 8 node: 34, Mach = 1.101087
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.029664
+Supersonic flow in pipe: 8 node: 33, Mach = 1.090543
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100935
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.023839
+Supersonic flow in pipe: 8 node: 33, Mach = 1.088236
+Supersonic flow in pipe: 8 node: 34, Mach = 1.100060
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.015295
+Supersonic flow in pipe: 8 node: 33, Mach = 1.084577
+Supersonic flow in pipe: 8 node: 34, Mach = 1.098947
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.005911
+Supersonic flow in pipe: 8 node: 33, Mach = 1.080224
+Supersonic flow in pipe: 8 node: 34, Mach = 1.098007
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 32, Mach = 1.003618
+Supersonic flow in pipe: 8 node: 33, Mach = 1.079106
+Supersonic flow in pipe: 8 node: 34, Mach = 1.097716
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.075233
+Supersonic flow in pipe: 8 node: 34, Mach = 1.096354
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.069402
+Supersonic flow in pipe: 8 node: 34, Mach = 1.094454
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.062811
+Supersonic flow in pipe: 8 node: 34, Mach = 1.092560
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.061128
+Supersonic flow in pipe: 8 node: 34, Mach = 1.089234
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.055549
+Supersonic flow in pipe: 8 node: 34, Mach = 1.077106
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.047494
+Supersonic flow in pipe: 8 node: 34, Mach = 1.060257
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.038757
+Supersonic flow in pipe: 8 node: 34, Mach = 1.043515
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.036543
+Supersonic flow in pipe: 8 node: 34, Mach = 1.039290
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.029427
+Supersonic flow in pipe: 8 node: 34, Mach = 1.024411
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.019370
+Supersonic flow in pipe: 8 node: 34, Mach = 1.003983
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.008717
+Sonic condition in boundary: 14
+Supersonic flow in pipe: 8 node: 33, Mach = 1.006033
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+Sonic condition in boundary: 14
+
+===================================
+Progress : 67.0353% 
+-----------------------------------
+Time left to the end: 0:00:00,395 
+===================================
+
+
+===================================
+Progress : 68.0004% 
+-----------------------------------
+Time left to the end: 0:00:00,384 
+===================================
+
+
+===================================
+Progress : 69.0017% 
+-----------------------------------
+Time left to the end: 0:00:00,373 
+===================================
+
+
+===================================
+Progress : 70.0353% 
+-----------------------------------
+Time left to the end: 0:00:00,361 
+===================================
+
+
+===================================
+Progress : 71.0249% 
+-----------------------------------
+Time left to the end: 0:00:00,350 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 4
+____________________________________________________
+INFO: Intake mass:         0.614264 (g)
+INFO: Exhaust mass:        -0.501258 (g)
+INFO: Trapped mass:        0.639234 (g)
+INFO: Pressure at I.C.:    1.40951 (bar)
+INFO: Fuel mass:           nan (mg)
+____________________________________________________
+
+===================================
+Progress : 72.0345% 
+-----------------------------------
+Time left to the end: 0:00:00,339 
+===================================
+
+
+===================================
+Progress : 73.0115% 
+-----------------------------------
+Time left to the end: 0:00:00,328 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 6
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    nan (bar)
+INFO: Calculated temperature at E.O.: nan (°C)
+____________________________________________________
+
+
+===================================
+Progress : 74.0242% 
+-----------------------------------
+Time left to the end: 0:00:00,316 
+===================================
+
+
+===================================
+Progress : 75.0254% 
+-----------------------------------
+Time left to the end: 0:00:00,304 
+===================================
+
+
+===================================
+Progress : 76.0064% 
+-----------------------------------
+Time left to the end: 0:00:00,292 
+===================================
+
+
+===================================
+Progress : 77.0265% 
+-----------------------------------
+Time left to the end: 0:00:00,279 
+===================================
+
+
+===================================
+Progress : 78.013% 
+-----------------------------------
+Time left to the end: 0:00:00,267 
+===================================
+
+
+===================================
+Progress : 79.0152% 
+-----------------------------------
+Time left to the end: 0:00:00,255 
+===================================
+
+
+===================================
+Progress : 80.0298% 
+-----------------------------------
+Time left to the end: 0:00:00,243 
+===================================
+
+
+===================================
+Progress : 81.033% 
+-----------------------------------
+Time left to the end: 0:00:00,230 
+===================================
+
+
+===================================
+Progress : 82.002% 
+-----------------------------------
+Time left to the end: 0:00:00,218 
+===================================
+
+
+===================================
+Progress : 83.0064% 
+-----------------------------------
+Time left to the end: 0:00:00,206 
+===================================
+
+
+===================================
+Progress : 84.0113% 
+-----------------------------------
+Time left to the end: 0:00:00,193 
+===================================
+
+
+===================================
+Progress : 85.0175% 
+-----------------------------------
+Time left to the end: 0:00:00,181 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 1
+____________________________________________________
+INFO: Intake mass:         0.580373 (g)
+INFO: Exhaust mass:        -0.51755 (g)
+INFO: Trapped mass:        0.606684 (g)
+INFO: Pressure at I.C.:    1.45566 (bar)
+INFO: Fuel mass:           nan (mg)
+____________________________________________________
+
+===================================
+Progress : 86.0255% 
+-----------------------------------
+Time left to the end: 0:00:00,169 
+===================================
+
+
+===================================
+Progress : 87.0284% 
+-----------------------------------
+Time left to the end: 0:00:00,156 
+===================================
+
+
+===================================
+Progress : 88.0317% 
+-----------------------------------
+Time left to the end: 0:00:00,144 
+===================================
+
+INFO: Begin gas-exchange process in cylinder 2
+____________________________________________________
+
+INFO: Calculated pressure at E.O.:    nan (bar)
+INFO: Calculated temperature at E.O.: nan (°C)
+____________________________________________________
+
+
+===================================
+Progress : 89.0231% 
+-----------------------------------
+Time left to the end: 0:00:00,132 
+===================================
+
+
+===================================
+Progress : 90.0317% 
+-----------------------------------
+Time left to the end: 0:00:00,120 
+===================================
+
+
+===================================
+Progress : 91.0033% 
+-----------------------------------
+Time left to the end: 0:00:00,108 
+===================================
+
+
+===================================
+Progress : 92.0054% 
+-----------------------------------
+Time left to the end: 0:00:00,096 
+===================================
+
+
+===================================
+Progress : 93.0246% 
+-----------------------------------
+Time left to the end: 0:00:00,084 
+===================================
+
+
+===================================
+Progress : 94.0198% 
+-----------------------------------
+Time left to the end: 0:00:00,072 
+===================================
+
+
+===================================
+Progress : 95.0221% 
+-----------------------------------
+Time left to the end: 0:00:00,059 
+===================================
+
+
+===================================
+Progress : 96.0234% 
+-----------------------------------
+Time left to the end: 0:00:00,048 
+===================================
+
+
+===================================
+Progress : 97.0253% 
+-----------------------------------
+Time left to the end: 0:00:00,036 
+===================================
+
+
+===================================
+Progress : 98.0288% 
+-----------------------------------
+Time left to the end: 0:00:00,023 
+===================================
+
+
+===================================
+Progress : 99.0311% 
+-----------------------------------
+Time left to the end: 0:00:00,011 
+===================================
+
+INFO: End of Gas-exchange process in cylinder 5
+____________________________________________________
+INFO: Intake mass:         0.569181 (g)
+INFO: Exhaust mass:        -0.588082 (g)
+INFO: Trapped mass:        0.603013 (g)
+INFO: Pressure at I.C.:    1.4815 (bar)
+INFO: Fuel mass:           nan (mg)
+____________________________________________________
+
+ 
+ 
+INFO:----------------------------------------------
+INFO: ENGINE PERFORMANCE
+INFO:----------------------------------------------
+INFO: Effective torque:                       nan (Nm)
+INFO: Effective Power (Mechanism):            nan (kW)
+INFO:----------------------------------------------
+ 
+ INFO : == CYCLE N. 3 == 
+ 
+ 
+===================================
+Progress : 100.021% 
+-----------------------------------
+Time left to the end: 0:00:00,000 
+===================================
+
+
+ 
+ 
+INFO:----------------------------------------------
+INFO: ENGINE PERFORMANCE
+INFO:----------------------------------------------
+INFO: Effective torque:                       nan (Nm)
+INFO: Effective Power (Mechanism):            nan (kW)
+INFO:----------------------------------------------
+
+===================================
+Time consumed: 0:00:01,240 
+===================================
+
+INFO: *** CMT : SIMULATION FINISHED CORRECTLY ***

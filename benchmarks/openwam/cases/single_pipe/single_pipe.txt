@@ -1,0 +1,79 @@
+2200                <OpenWAMVersion (must equal vers=2200)>
+1                   <Independent flag: 1=true (standalone run)>
+
+0.0005  0.05        <agincr (s)  SimulationDuration (s)>
+1.0     20.0        <AmbientPressure (bar)  AmbientTemperature (degC)>
+0       0           <tipocalculoespecies=0 (nmCalculoSimple)  tipogamma=0 (nmGammaConstante)>
+0                   <hayBQ=0, EngineBlock false, no engine data follows>
+0                   <haycombustible=0, SpeciesNumber=3, no fuel-type field>
+0.0  1.0            <CompAtmosfera: GasesQuemados=0.0  Aire=1.0>
+
+1                   <NumberOfPipes>
+1  2  1  1          <FNodoIzq=1(BC#1) FNodoDer=2(BC#2) FNTramos=1 FNumeroConductos=1>
+0.0                 <FFriccion (unused, FCoefAjusFric=0)>
+20.0  20.0  2.0  0.0 <FTIniParedTub(degC) FTini(degC) FPini(bar) FVelMedia(m/s)>
+1  0.0  0.0         <TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  1.0            <FComposicionInicial: GasesQuemados=0.0 Aire=1.0>
+0.01  2             <FMallado=0.01m FTctpt=2(nmTempConstante)>
+2                   <metodo[0]=2 (nmTVD)>
+0.8                 <FCourant>
+0.05                <FDExtTramo[0]: diameter at node 0 (m)>
+1.0  0.05           <FLTramo[1]=1.0m FDExtTramo[1]=0.05m>
+
+0                   <NumberOfValves>
+
+0                   <NumberOfPlenums>
+0  0  0             <WAMer-only counters: numeroturbinas numeroventuris numerounionesdireccionales>
+
+0                   <NumberOfCompressors>
+
+2                   <NumberOfConnections>
+0 0 0 0 0 0 0 0 0   <WAMer-only counters>
+3                   <BC#1 TipoCC=3 (nmClosedEnd)>
+0                   <BC#2 TipoCC=0 (nmOpenEndAtmosphere)>
+1.0                 <BC#2 FPerdidaExtremo>
+
+0                   <NumberOfAxis>
+
+0                   <NumberOfSensors>
+
+0                   <NumberOfControllers>
+
+0                   <avg results type: 0=nmLastCycle>
+0                   <NumPipesAvg>
+0                   <WAMer dummy int after NumPipesAvg>
+0                   <NumCylindersAvg>
+0                   <NumEnginesAvg>
+0                   <NumPlenumsAvg>
+0                   <NumAxisAvg>
+0                   <NumCompressorAvg>
+0                   <NumTurbineAvg>
+0                   <NumValvesAvg>
+0                   <NumRootsAvg>
+0                   <NumVenturisAvg>
+0                   <NumConnectionsAvg>
+0                   <NumSensorAvg>
+0                   <NumControllersAvg>
+
+0                   <NumCylindersIns>
+0                   <NumPlenumsIns>
+0                   <NumPipesIns>
+0                   <WAMer dummy int after NumPipesIns>
+0                   <NumVenturisIns>
+0                   <NumValvesIns>
+0                   <NumTurboIns>
+0                   <NumCompressorIns>
+0                   <NumTurbineIns>
+0                   <NumRootsIns>
+0                   <NumConnectionsIns>
+0                   <NumWasteGateIns>
+0                   <NumReedIns>
+0                   <NumSensorIns>
+0                   <NumControllersIns>
+
+3                   <FNumMagnitudesEspTemp: request 3 space-time parameters>
+0 0 1               <NumCilEspTemp=0 NumDepEspTemp=0 NumTubEspTemp=1>
+1                   <PipeID for space-time output (pipe 1)>
+0 1 2               <ParameterID list: 0=pressure 1=temperature 2=velocity>
+
+0                   <dll=0, ReadDataDLL skipped>

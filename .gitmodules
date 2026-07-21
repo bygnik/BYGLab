@@ -1,0 +1,3 @@
+[submodule "benchmarks/openwam/OpenWAM"]
+	path = benchmarks/openwam/OpenWAM
+	url = https://github.com/CMT-UPV/OpenWAM.git

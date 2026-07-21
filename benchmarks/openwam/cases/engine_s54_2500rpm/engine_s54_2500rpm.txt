@@ -1,0 +1,183 @@
+2200                <OpenWAMVersion, must equal vers=2200>
+1                   <Independent flag: 1=true>
+
+0.00001  3.0        <agincr(s, guess, empirically verify) SimulationDuration=3 cycles (engine mode: cycles, not seconds!)>
+1.0     20.0        <AmbientPressure(bar) AmbientTemperature(degC)>
+0       0           <tipocalculoespecies=0(nmCalculoSimple) tipogamma=0(nmGammaConstante)>
+1                   <hayBQ=1, EngineBlock=true>
+0  0  0             <tipociclo=0(4T, since only 1 means 2T) tipomod=0(nmEstacionario) EGR=0>
+1                   <haycombustible=1, fuel injection considered>
+1                   <tipocombustible=1(gasoline/MEP), SpeciesNumber=4>
+0.0  0.0  1.0       <CompAtmosfera: GasesQuemados=0 Gasolina=0 Aire=1.0>
+
+0                   <ACT flag = 0, standard Wiebe combustion, no injection-rate model>
+1                   <NCilin = 1>
+2500                <FRegimen (RPM)>
+1.05                <FPresionInicialRCA (bar, seed)>
+0.00074264          <FMasaInicial (kg, seed mass at IVC, ideal gas at 1.05bar/293.15K/V_bdc)>
+0                   <ImponerComposicionAE = 0>
+0.0  0.0  1.0       <initial in-cylinder composition: GasesQuemados=0 Gasolina=0 Aire=1.0>
+0                   <TipoPresionAAE = 0, pressure at IVC calculated>
+1                   <tipocombustion = 1 (gasoline/MEP)>
+1.0                 <FDosadoInicial, 1.0=stoichiometric>
+0.98                <FRendimientoCombustion>
+43000000            <FPoderCalorifico (J/kg, gasoline LHV)>
+750                 <FDensidadCombustible (kg/m3)>
+1                   <FNumTuboRendVol = 1 (intake pipe index)>
+450  550  420       <FTempInicial: Piston(K) Culata(K) Cylinder(K)>
+0.0059447  0.0059447 <AreaPiston AreaCulata (m2, bore circle area)>
+0.01  150  2700  900 <FParedPiston: Espesor Conductividad Density CalorEspecifico (inert, CalculoTempPared=2)>
+0.01  150  2700  900 <FParedCulata (inert)>
+0.01  150  2700  900 <FParedCilindro (inert)>
+1.0  1.0  100000  90 <FAjusteTranCalAdm FAjusteTranCalEsc FParPotMax(inert) FTempRefrigerante(inert)>
+2                   <CalculoTempPared = 2 (nmTempFija, fixed wall temp)>
+2.28  0.00324  0.0  <Woschni cw1 cw2 xpe(dead field)>
+0.139               <FGeom.Biela (m)>
+0.091               <FGeom.Carrera (m)>
+0.087               <FGeom.Diametro (m)>
+11.0                <FGeom.RelaCompresion>
+0.0                 <FGeom.DiametroBowl = 0, flat piston>
+0.0                 <FGeom.AlturaBowl>
+0.02                <FGeom.DistanciaValvulas>
+0.0                 <FGeom.AreaBlowBy = 0>
+0.7                 <FGeom.CDBlowBy (inert since AreaBlowBy=0)>
+0.0                 <FGeom.Excentricidad (mm) = 0>
+0.021               <FGeom.DiametroBulon (inert, CoefDeformaciones=0)>
+0.03                <FGeom.AlturaCoronaPiston (inert)>
+0.45                <FGeom.MasaBiela (inert)>
+0.35                <FGeom.MasaPistonSegmentosBulon (inert)>
+2.1e11              <FGeom.ModuloElasticidad (inert)>
+0.0                 <FGeom.CoefDeformaciones = 0>
+0  0  0  0          <FPerMec.Coef0..3 (torque/output only)>
+1                   <FNumeroLeyesQuemado = 1>
+0  0  0             <ma mf n (irrelevant, size==1)>
+1                   <FNWiebes = 1>
+2.5  6.9  1.0  45  15 <Wiebe: m C Beta IncAlpha(deg) Alpha0(deg BTDC, positive)>
+0                   <FTipoDatosIny = 0, no injection-timing data>
+0                   <engine-level controllers count = 0>
+0                   <per-cylinder controllers count = 0 (loop over NCilin=1)>
+
+2                   <NumberOfPipes>
+1  2  1  1          <Pipe1(intake runner): FNodoIzq=1(atmosphere) FNodoDer=2(intake valve)>
+0.0                 <FFriccion>
+20.0  20.0  1.0  0.0 <FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0         <TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0       <FComposicionInicial: GasesQuemados=0 Gasolina=0 Aire=1.0>
+0.01  2             <FMallado=0.01m FTctpt=2>
+2                   <metodo[0]=2(nmTVD)>
+0.4                 <FCourant>
+0.045               <FDExtTramo[0]>
+0.3  0.045          <FLTramo[1]=0.3m FDExtTramo[1]=0.045m>
+3  4  1  1          <Pipe2(exhaust runner): FNodoIzq=3(exhaust valve) FNodoDer=4(atmosphere)>
+0.0                 <FFriccion>
+20.0  20.0  1.0  0.0 <FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0         <TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0       <FComposicionInicial: GasesQuemados=0 Gasolina=0 Aire=1.0>
+0.01  2             <FMallado=0.01m FTctpt=2>
+2                   <metodo[0]=2(nmTVD)>
+0.4                 <FCourant>
+0.04                <FDExtTramo[0]>
+0.4  0.04           <FLTramo[1]=0.4m FDExtTramo[1]=0.04m>
+
+2                   <NumberOfValves>
+1                   <Valve1(intake): type=1 (TValvula4T)>
+0.0495              <FDiametro (m, area-matched equivalent of 2x35mm)>
+27                  <NumLev>
+10.0                <FIncrAng (deg)>
+340.0               <FAnguloApertura (deg, IVO, 0/720=firing TDC)>
+0                   <FDiametroRef = 0, no Cd rescale>
+0                   <FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001 <FLevantamiento, 27 values, m, versine 0-12mm-0 over 260deg>
+13                  <NumCD>
+0.001               <FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 <FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 <FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 <FDatosTorbellino, 13 values, all zero>
+1                   <ControlRegimen = 1, cylinder-bound>
+1.0                 <FRelacionVelocidades (inert once bound to cylinder)>
+0                   <VVT controllers count = 0>
+1                   <Valve2(exhaust): type=1 (TValvula4T)>
+0.0431              <FDiametro (m, area-matched equivalent of 2x30.5mm)>
+27                  <NumLev>
+10.0                <FIncrAng (deg)>
+140.0               <FAnguloApertura (deg, EVO)>
+0                   <FDiametroRef = 0, no Cd rescale>
+0                   <FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001 <FLevantamiento, 27 values>
+13                  <NumCD>
+0.001               <FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 <FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 <FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 <FDatosTorbellino, 13 values>
+1                   <ControlRegimen = 1>
+1.0                 <FRelacionVelocidades (inert)>
+0                   <VVT controllers count = 0>
+
+0                   <NumberOfPlenums>
+0  0  0             <WAMer-only counters>
+
+0                   <NumberOfCompressors>
+
+4                   <NumberOfConnections>
+0 0 0 0 0 0 0 0 0   <WAMer-only counters>
+0                   <BC#1(node1) TipoCC=0 (nmOpenEndAtmosphere), intake pipe far end>
+1.0                 <BC#1 FPerdidaExtremo>
+7                   <BC#2(node2) TipoCC=7 (nmIntakeValve)>
+1  1                <BC#2 numid(WAMer-only, dead) FNumeroCilindro=1>
+1                   <BC#2 quevalv=1, references Valve1(intake)>
+8                   <BC#3(node3) TipoCC=8 (nmExhaustValve)>
+1  1                <BC#3 numid(WAMer-only, dead) FNumeroCilindro=1>
+2                   <BC#3 quevalv=2, references Valve2(exhaust)>
+0                   <BC#4(node4) TipoCC=0 (nmOpenEndAtmosphere), exhaust pipe far end>
+1.0                 <BC#4 FPerdidaExtremo>
+
+0                   <NumberOfAxis>
+
+0                   <NumberOfSensors>
+
+0                   <NumberOfControllers>
+
+0                   <avg results type: 0=nmLastCycle>
+0                   <NumPipesAvg>
+0                   <WAMer dummy int after NumPipesAvg>
+0                   <NumCylindersAvg>
+1                   <NumEnginesAvg = 1 (required: AvgEngine is dereferenced unconditionally in OutputAverageResults, must be non-NULL)>
+2                   <engine avg nvars>
+1 12                <engine avg var IDs: 1=ParEfectivo(torque) 12=Potencia(power)>
+0                   <NumPlenumsAvg>
+0                   <NumAxisAvg>
+0                   <NumCompressorAvg>
+0                   <NumTurbineAvg>
+0                   <NumValvesAvg>
+0                   <NumRootsAvg>
+0                   <NumVenturisAvg>
+0                   <NumConnectionsAvg>
+0                   <NumSensorAvg>
+0                   <NumControllersAvg>
+
+1                   <NumCylindersIns = 1>
+1                   <CylinderID = 1>
+3                   <FNumVarIns = 3, cylinder instantaneous vars>
+0 1 11              <var IDs: 0=Pressure 1=Temperature 11=Volumen>
+0                   <NumPlenumsIns>
+0                   <NumPipesIns>
+0                   <WAMer dummy int after NumPipesIns>
+0                   <NumVenturisIns>
+0                   <NumValvesIns>
+0                   <NumTurboIns>
+0                   <NumCompressorIns>
+0                   <NumTurbineIns>
+0                   <NumRootsIns>
+0                   <NumConnectionsIns>
+0                   <NumWasteGateIns>
+0                   <NumReedIns>
+0                   <NumSensorIns>
+0                   <NumControllersIns>
+
+3                   <FNumMagnitudesEspTemp: 3 unique parameter types>
+0 0 2               <NumCilEspTemp=0 NumDepEspTemp=0 NumTubEspTemp=2>
+1                   <PipeID 1 (intake)>
+2                   <PipeID 2 (exhaust)>
+0 1 2               <ParameterID list: 0=pressure 1=temperature 2=velocity>
+
+0                   <dll=0, ReadDataDLL skipped>

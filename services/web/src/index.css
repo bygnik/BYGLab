@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-size: clamp(15px, 1vw + 0.75rem, 19px);
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(58, 124, 246, 0.12), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(242, 169, 59, 0.06), transparent 50%),
+    #080B12;
+}
+
+input[type="range"] {
+  accent-color: #3A7CF6;
+}

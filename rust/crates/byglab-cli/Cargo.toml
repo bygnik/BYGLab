@@ -1,0 +1,8 @@
+[package]
+name = "byglab-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+byglab-core = { path = "../byglab-core" }
+serde_json = "1"

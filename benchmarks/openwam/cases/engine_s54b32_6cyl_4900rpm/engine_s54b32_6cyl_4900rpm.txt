@@ -1,0 +1,539 @@
+2200	<OpenWAMVersion>
+1	<Independent=true>
+
+0.00001  2.0	<agincr(s) SimulationDuration=2.0 cycles (1.0 produced no INS.DAT: no cylinder completes a full local 720deg within 1 engine cycle given the firing offsets, and the output-flush never triggers)>
+1.0     20.0	<AmbientPressure(bar) AmbientTemperature(degC)>
+0       0	<tipocalculoespecies=0(nmCalculoSimple) tipogamma=0(nmGammaConstante)>
+1	<hayBQ=1, EngineBlock=true>
+0  0  0	<tipociclo=0(4T) tipomod=0(nmEstacionario) EGR=0>
+1	<haycombustible=1>
+1	<tipocombustible=1(gasoline/MEP), SpeciesNumber=4>
+0.0  0.0  1.0	<CompAtmosfera: GasesQuemados=0 Gasolina=0 Aire=1.0>
+
+0	<ACT flag = 0>
+6	<NCilin = 6>
+4900	<FRegimen (RPM)>
+1.05	<FPresionInicialRCA (bar, seed)>
+7.394279e-04	<FMasaInicial (kg, seed mass, shared init for all 6 cylinders)>
+0	<ImponerComposicionAE = 0>
+0.0  0.0  1.0	<initial in-cylinder composition: GasesQuemados=0 Gasolina=0 Aire=1.0>
+0	<TipoPresionAAE = 0>
+1	<tipocombustion = 1 (gasoline/MEP)>
+1.0	<FDosadoInicial, 1.0=stoichiometric>
+0.98	<FRendimientoCombustion>
+43000000	<FPoderCalorifico (J/kg)>
+750	<FDensidadCombustible (kg/m3)>
+1	<FNumTuboRendVol = 1 (cyl1 intake pipe, reporting reference only)>
+450  550  420	<FTempInicial: Piston(K) Culata(K) Cylinder(K)>
+0.0059447  0.0059447	<AreaPiston AreaCulata (m2)>
+0.01  150  2700  900	<FParedPiston (inert, CalculoTempPared=2)>
+0.01  150  2700  900	<FParedCulata (inert)>
+0.01  150  2700  900	<FParedCilindro (inert)>
+1.0  1.0  100000  90	<FAjusteTranCalAdm FAjusteTranCalEsc FParPotMax(inert) FTempRefrigerante(inert)>
+2	<CalculoTempPared = 2 (nmTempFija, fixed wall temp)>
+2.28  0.00324  0.0	<Woschni cw1 cw2 xpe(dead field)>
+0.139	<FGeom.Biela (m)>
+0.091	<FGeom.Carrera (m)>
+0.087	<FGeom.Diametro (m)>
+11.5	<FGeom.RelaCompresion (real S54B32 spec)>
+0.0	<FGeom.DiametroBowl = 0>
+0.0	<FGeom.AlturaBowl>
+0.02	<FGeom.DistanciaValvulas>
+0.0	<FGeom.AreaBlowBy = 0>
+0.7	<FGeom.CDBlowBy (inert)>
+0.0	<FGeom.Excentricidad (mm) = 0>
+0.021	<FGeom.DiametroBulon (inert)>
+0.03	<FGeom.AlturaCoronaPiston (inert)>
+0.45	<FGeom.MasaBiela (inert)>
+0.35	<FGeom.MasaPistonSegmentosBulon (inert)>
+2.1e11	<FGeom.ModuloElasticidad (inert)>
+0.0	<FGeom.CoefDeformaciones = 0>
+0  0  0  0	<FPerMec.Coef0..3>
+1	<FNumeroLeyesQuemado = 1>
+0  0  0	<ma mf n (irrelevant, size==1)>
+1	<FNWiebes = 1>
+2.5  6.9  1.0  45  15	<Wiebe: m C Beta IncAlpha(deg) Alpha0(deg BTDC) - shared by all 6 cylinders>
+0	<FTipoDatosIny = 0>
+1	<tipodesfa = 1 (nmImpuesto, firing-order permutation)>
+1	<firing position 0: cylinder 1 (FDesfase[0]=0)>
+5	<firing position 1: cylinder 5 (FDesfase[4]=120)>
+3	<firing position 2: cylinder 3 (FDesfase[2]=240)>
+6	<firing position 3: cylinder 6 (FDesfase[5]=360)>
+2	<firing position 4: cylinder 2 (FDesfase[1]=480)>
+4	<firing position 5: cylinder 4 (FDesfase[3]=600)>
+0	<global engine-level controllers count = 0>
+0	<cyl 1 per-cylinder controllers count = 0>
+0	<cyl 2 per-cylinder controllers count = 0>
+0	<cyl 3 per-cylinder controllers count = 0>
+0	<cyl 4 per-cylinder controllers count = 0>
+0	<cyl 5 per-cylinder controllers count = 0>
+0	<cyl 6 per-cylinder controllers count = 0>
+
+15	<NumberOfPipes>
+1  2  1  1	<Pipe1: cyl1 intake runner (ITB), atm(node1) to intake valve(node2)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+3  4  1  1	<Pipe2: cyl2 intake runner (ITB), atm(node3) to intake valve(node4)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+5  6  1  1	<Pipe3: cyl3 intake runner (ITB), atm(node5) to intake valve(node6)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+7  8  1  1	<Pipe4: cyl4 intake runner (ITB), atm(node7) to intake valve(node8)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+9  10  1  1	<Pipe5: cyl5 intake runner (ITB), atm(node9) to intake valve(node10)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+11  12  1  1	<Pipe6: cyl6 intake runner (ITB), atm(node11) to intake valve(node12)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.045	<FDExtTramo[0]=0.045m>
+0.3  0.045	<FLTramo[1] FDExtTramo[1]>
+13  14  1  1	<Pipe7: cyl1 exhaust runner to branch A>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+15  14  1  1	<Pipe8: cyl3 exhaust runner to branch A>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+16  14  1  1	<Pipe9: cyl2 exhaust runner to branch A>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+14  17  1  1	<Pipe10: secondary A, branch A(node14) to branch C(node17)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.055	<FDExtTramo[0]=0.055m>
+0.3  0.055	<FLTramo[1] FDExtTramo[1]>
+18  19  1  1	<Pipe11: cyl5 exhaust runner to branch B>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+20  19  1  1	<Pipe12: cyl6 exhaust runner to branch B>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+21  19  1  1	<Pipe13: cyl4 exhaust runner to branch B>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.04	<FDExtTramo[0]=0.04m>
+0.35  0.04	<FLTramo[1] FDExtTramo[1]>
+19  17  1  1	<Pipe14: secondary B, branch B(node19) to branch C(node17)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.055	<FDExtTramo[0]=0.055m>
+0.3  0.055	<FLTramo[1] FDExtTramo[1]>
+17  22  1  1	<Pipe15: tailpipe, branch C(node17) to atmosphere(node22)>
+0.0	<FFriccion>
+20.0  20.0  1.0  0.0	<FTIniParedTub FTini(degC) FPini=1.0bar FVelMedia=0>
+1  0.0  0.0	<TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  0.0  1.0	<FComposicionInicial: air>
+0.01  2	<FMallado=0.01m FTctpt=2>
+2	<metodo[0]=2(nmTVD)>
+0.4	<FCourant>
+0.065	<FDExtTramo[0]=0.065m>
+0.5  0.065	<FLTramo[1] FDExtTramo[1]>
+
+12	<NumberOfValves>
+1	<Valve1: intake cyl1 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve2: intake cyl2 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve3: intake cyl3 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve4: intake cyl4 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve5: intake cyl5 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve6: intake cyl6 (IVO 340deg): type=1 (TValvula4T)>
+0.0495	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+340.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve7: exhaust cyl1 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve8: exhaust cyl2 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve9: exhaust cyl3 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve10: exhaust cyl4 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve11: exhaust cyl5 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+1	<Valve12: exhaust cyl6 (EVO 140deg): type=1 (TValvula4T)>
+0.0431	<FDiametro (m)>
+27	<NumLev>
+10.0	<FIncrAng (deg)>
+140.0	<FAnguloApertura (deg)>
+0	<FDiametroRef = 0, no Cd rescale>
+0	<FCoefTorbMedio (dead field)>
+0.000001 0.000174 0.000687 0.001509 0.002592 0.003872 0.005277 0.006723 0.008128 0.009408 0.010491 0.011313 0.011826 0.012000 0.011826 0.011313 0.010491 0.009408 0.008128 0.006723 0.005277 0.003872 0.002592 0.001509 0.000687 0.000174 0.000001	<FLevantamiento, 27 values>
+13	<NumCD>
+0.001	<FIncrLev (m)>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDEntrada, 13 values>
+0.0000 0.1600 0.3200 0.4800 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400 0.6400	<FDatosCDSalida, 13 values>
+0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0	<FDatosTorbellino, 13 values>
+1	<ControlRegimen = 1, cylinder-bound>
+1.0	<FRelacionVelocidades (inert)>
+0	<VVT controllers count = 0>
+
+0	<NumberOfPlenums>
+0  0  0	<WAMer-only counters>
+
+0	<NumberOfCompressors>
+
+22	<NumberOfConnections>
+0 0 0 0 0 0 0 0 0	<WAMer-only counters>
+0	<BC#1: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#2: TipoCC=7 (nmIntakeValve) cyl1>
+1  1	<numid(dead) FNumeroCilindro>
+1	<quevalv=1 (intake valve def for cyl1)>
+0	<BC#3: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#4: TipoCC=7 (nmIntakeValve) cyl2>
+1  2	<numid(dead) FNumeroCilindro>
+2	<quevalv=2 (intake valve def for cyl2)>
+0	<BC#5: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#6: TipoCC=7 (nmIntakeValve) cyl3>
+1  3	<numid(dead) FNumeroCilindro>
+3	<quevalv=3 (intake valve def for cyl3)>
+0	<BC#7: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#8: TipoCC=7 (nmIntakeValve) cyl4>
+1  4	<numid(dead) FNumeroCilindro>
+4	<quevalv=4 (intake valve def for cyl4)>
+0	<BC#9: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#10: TipoCC=7 (nmIntakeValve) cyl5>
+1  5	<numid(dead) FNumeroCilindro>
+5	<quevalv=5 (intake valve def for cyl5)>
+0	<BC#11: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+7	<BC#12: TipoCC=7 (nmIntakeValve) cyl6>
+1  6	<numid(dead) FNumeroCilindro>
+6	<quevalv=6 (intake valve def for cyl6)>
+8	<BC#13: TipoCC=8 (nmExhaustValve) cyl1>
+1  1	<numid(dead) FNumeroCilindro>
+7	<quevalv=7 (exhaust valve def for cyl1)>
+12	<BC#14: TipoCC=12 (nmBranch) branch A: cyl1+cyl3+cyl2 exhaust runners + secondary A>
+8	<BC#15: TipoCC=8 (nmExhaustValve) cyl3>
+1  3	<numid(dead) FNumeroCilindro>
+9	<quevalv=9 (exhaust valve def for cyl3)>
+8	<BC#16: TipoCC=8 (nmExhaustValve) cyl2>
+1  2	<numid(dead) FNumeroCilindro>
+8	<quevalv=8 (exhaust valve def for cyl2)>
+12	<BC#17: TipoCC=12 (nmBranch) branch C: secondary A + secondary B + tailpipe>
+8	<BC#18: TipoCC=8 (nmExhaustValve) cyl5>
+1  5	<numid(dead) FNumeroCilindro>
+11	<quevalv=11 (exhaust valve def for cyl5)>
+12	<BC#19: TipoCC=12 (nmBranch) branch B: cyl5+cyl6+cyl4 exhaust runners + secondary B>
+8	<BC#20: TipoCC=8 (nmExhaustValve) cyl6>
+1  6	<numid(dead) FNumeroCilindro>
+12	<quevalv=12 (exhaust valve def for cyl6)>
+8	<BC#21: TipoCC=8 (nmExhaustValve) cyl4>
+1  4	<numid(dead) FNumeroCilindro>
+10	<quevalv=10 (exhaust valve def for cyl4)>
+0	<BC#22: TipoCC=0 (nmOpenEndAtmosphere)>
+1.0	<FPerdidaExtremo>
+
+0	<NumberOfAxis>
+
+0	<NumberOfSensors>
+
+0	<NumberOfControllers>
+
+2	<FTypeOfInsResults=2 (nmAllCyclesConcatenated) - this field actually governs INSTANTANEOUS results retention despite living in the AVG-results read function; 0=nmLastCycle silently keeps only the final cycle's data, truncating the file>
+0	<NumPipesAvg>
+0	<WAMer dummy int after NumPipesAvg>
+0	<NumCylindersAvg>
+1	<NumEnginesAvg = 1 (required workaround)>
+2	<engine avg nvars>
+1 12	<engine avg var IDs: 1=ParEfectivo(torque) 12=Potencia(power)>
+0	<NumPlenumsAvg>
+0	<NumAxisAvg>
+0	<NumCompressorAvg>
+0	<NumTurbineAvg>
+0	<NumValvesAvg>
+0	<NumRootsAvg>
+0	<NumVenturisAvg>
+0	<NumConnectionsAvg>
+0	<NumSensorAvg>
+0	<NumControllersAvg>
+
+6	<NumCylindersIns = 6 (all cylinders)>
+1	<CylinderID = 1>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+2	<CylinderID = 2>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+3	<CylinderID = 3>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+4	<CylinderID = 4>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+5	<CylinderID = 5>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+6	<CylinderID = 6>
+3	<FNumVarIns = 3>
+0 1 11	<var IDs: 0=Pressure 1=Temperature 11=Volumen>
+0	<NumPlenumsIns>
+0	<NumPipesIns>
+0	<WAMer dummy int after NumPipesIns>
+0	<NumVenturisIns>
+0	<NumValvesIns>
+0	<NumTurboIns>
+0	<NumCompressorIns>
+0	<NumTurbineIns>
+0	<NumRootsIns>
+0	<NumConnectionsIns>
+0	<NumWasteGateIns>
+0	<NumReedIns>
+0	<NumSensorIns>
+0	<NumControllersIns>
+
+0	<FNumMagnitudesEspTemp: 0, skip per-cell space-time dump for this case>
+
+0	<dll=0, ReadDataDLL skipped>

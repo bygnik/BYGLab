@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/__pycache__
+**/.pytest_cache
+**/dist
+**/*.egg-info
+Unconfirmed*.crdownload
+**/*.pdf
+rust/target/
+rust/crates/*/pkg/

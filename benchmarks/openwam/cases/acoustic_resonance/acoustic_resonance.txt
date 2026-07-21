@@ -1,0 +1,91 @@
+2200                <OpenWAMVersion (must equal vers=2200)>
+1                   <Independent flag: 1=true (standalone run)>
+
+0.0002  0.03        <agincr (s)  SimulationDuration (s)>
+1.0     20.0        <AmbientPressure (bar)  AmbientTemperature (degC)>
+0       0           <tipocalculoespecies=0 (nmCalculoSimple)  tipogamma=0 (nmGammaConstante)>
+0                   <hayBQ=0, EngineBlock false, no engine data follows>
+0                   <haycombustible=0, SpeciesNumber=3, no fuel-type field>
+0.0  1.0            <CompAtmosfera: GasesQuemados=0.0  Aire=1.0>
+
+2                   <NumberOfPipes>
+1  2  1  1          <Pipe1: FNodoIzq=1(closed) FNodoDer=2(junction) FNTramos=1 FNumeroConductos=1>
+0.0                 <FFriccion>
+20.0  20.0  1.05  0.0 <FTIniParedTub FTini(degC) FPini=1.05bar FVelMedia=0>
+1  0.0  0.0         <TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  1.0            <FComposicionInicial>
+0.01  2             <FMallado=0.01m FTctpt=2>
+2                   <metodo[0]=2 (nmTVD)>
+0.8                 <FCourant>
+0.05                <FDExtTramo[0]>
+1.0  0.05           <FLTramo[1]=1.0m FDExtTramo[1]=0.05m>
+2  3  1  1          <Pipe2: FNodoIzq=2(junction, shared with Pipe1) FNodoDer=3(closed) FNTramos=1 FNumeroConductos=1>
+0.0                 <FFriccion>
+20.0  20.0  1.00  0.0 <FTIniParedTub FTini(degC) FPini=1.00bar FVelMedia=0>
+1  0.0  0.0         <TipTC=1 FCoefAjusTC=0 FCoefAjusFric=0>
+0.0  1.0            <FComposicionInicial>
+0.01  2             <FMallado=0.01m FTctpt=2>
+2                   <metodo[0]=2 (nmTVD)>
+0.8                 <FCourant>
+0.05                <FDExtTramo[0]>
+1.0  0.05           <FLTramo[1]=1.0m FDExtTramo[1]=0.05m>
+
+0                   <NumberOfValves>
+
+0                   <NumberOfPlenums>
+0  0  0             <WAMer-only counters>
+
+0                   <NumberOfCompressors>
+
+3                   <NumberOfConnections>
+0 0 0 0 0 0 0 0 0   <WAMer-only counters>
+3                   <BC#1 (node1) TipoCC=3 (nmClosedEnd)>
+6                   <BC#2 (node2) TipoCC=6 (nmPipesConnection) - auto-detects Pipe1/Pipe2 sharing node 2>
+0.0 0.0             <BC#2 FEspesor(wall thickness) FConductividad(wall conductivity) - no heat transfer>
+3                   <BC#3 (node3) TipoCC=3 (nmClosedEnd)>
+
+0                   <NumberOfAxis>
+
+0                   <NumberOfSensors>
+
+0                   <NumberOfControllers>
+
+0                   <avg results type: 0=nmLastCycle>
+0                   <NumPipesAvg>
+0                   <WAMer dummy int after NumPipesAvg>
+0                   <NumCylindersAvg>
+0                   <NumEnginesAvg>
+0                   <NumPlenumsAvg>
+0                   <NumAxisAvg>
+0                   <NumCompressorAvg>
+0                   <NumTurbineAvg>
+0                   <NumValvesAvg>
+0                   <NumRootsAvg>
+0                   <NumVenturisAvg>
+0                   <NumConnectionsAvg>
+0                   <NumSensorAvg>
+0                   <NumControllersAvg>
+
+0                   <NumCylindersIns>
+0                   <NumPlenumsIns>
+0                   <NumPipesIns>
+0                   <WAMer dummy int after NumPipesIns>
+0                   <NumVenturisIns>
+0                   <NumValvesIns>
+0                   <NumTurboIns>
+0                   <NumCompressorIns>
+0                   <NumTurbineIns>
+0                   <NumRootsIns>
+0                   <NumConnectionsIns>
+0                   <NumWasteGateIns>
+0                   <NumReedIns>
+0                   <NumSensorIns>
+0                   <NumControllersIns>
+
+3                   <FNumMagnitudesEspTemp: 3 unique parameter types (applies to all listed pipes)>
+0 0 2               <NumCilEspTemp=0 NumDepEspTemp=0 NumTubEspTemp=2>
+1                   <PipeID 1>
+2                   <PipeID 2>
+0 1 2               <ParameterID list: 0=pressure 1=temperature 2=velocity (each file gets both pipes concatenated)>
+
+0                   <dll=0, ReadDataDLL skipped>

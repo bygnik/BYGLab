@@ -1,0 +1,4 @@
+hp=301 IMEP=13.14 BMEP=10.38 FMEP=2.75 air=456 VE=73% Ppeak=85 PatEVO=6.14 {}
+hp=321 IMEP=13.82 BMEP=11.05 FMEP=2.77 air=457 VE=73% Ppeak=89 PatEVO=6.41 {'wall_heat_frac': 0.1}
+hp=341 IMEP=14.16 BMEP=11.76 FMEP=2.41 air=457 VE=73% Ppeak=90 PatEVO=6.53 {'wall_heat_frac': 0.08, 'fmep_c': 0.055}
+hp=301 IMEP=13.11 BMEP=10.36 FMEP=2.75 air=456 VE=73% Ppeak=86 PatEVO=6.17 {'n_cycles': 5, 'n_cells': 32}
