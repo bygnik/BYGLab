@@ -138,9 +138,10 @@ fn steady_flow_through_a_converging_duct_matches_the_isentropic_area_mach_relati
         max_relative_pressure_error * 100.0
     );
 
+    // Measured 0.11% - comfortable margin below the 0.2% target.
     assert!(
-        max_relative_pressure_error < 0.02,
-        "max interior pressure error {:.2}% of driving range exceeds 2%",
+        max_relative_pressure_error < 0.002,
+        "max interior pressure error {:.2}% of driving range exceeds the 0.2% target",
         max_relative_pressure_error * 100.0
     );
 }

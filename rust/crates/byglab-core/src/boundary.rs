@@ -9,7 +9,7 @@
 use crate::gas::{GasProperties, PrimitiveState};
 use serde::{Deserialize, Serialize};
 
-/// The two ways (besides a junction) a pipe's end can be terminated.
+/// The three ways (besides a junction) a pipe's end can be terminated.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub enum BoundaryCondition {
     /// A solid, reflective wall: flow cannot cross it, so the outward
@@ -27,6 +27,13 @@ pub enum BoundaryCondition {
     /// reason (see `benchmarks/openwam/cases/single_pipe/` in the OpenWAM
     /// reference suite, which carries the same caveat).
     Reservoir { pressure: f64, temperature_kelvin: f64 },
+    /// Zero-gradient (transmissive/non-reflecting) outflow: the ghost cell
+    /// is simply a copy of the adjacent interior cell, so a wave crossing
+    /// this boundary sees no impedance change and generates no reflection.
+    /// Used for numerical test domains meant to be "large enough that the
+    /// boundary doesn't matter" (e.g. `tests/shu_osher.rs`) rather than a
+    /// physical pipe termination.
+    Outflow,
 }
 
 impl BoundaryCondition {
@@ -43,6 +50,7 @@ impl BoundaryCondition {
             BoundaryCondition::Reservoir { pressure, temperature_kelvin } => {
                 PrimitiveState::from_pressure_temperature(*pressure, *temperature_kelvin, 0.0, gas)
             }
+            BoundaryCondition::Outflow => interior,
         }
     }
 }
@@ -69,5 +77,13 @@ mod tests {
         let ghost = boundary.ghost_state(interior, &gas);
         assert_eq!(ghost.pressure, 101_325.0);
         assert_eq!(ghost.velocity, 0.0);
+    }
+
+    #[test]
+    fn outflow_ghost_state_exactly_copies_the_interior_state() {
+        let gas = GasProperties::AIR;
+        let interior = PrimitiveState { density: 3.857143, velocity: 2.629369, pressure: 10.333333 };
+        let ghost = BoundaryCondition::Outflow.ghost_state(interior, &gas);
+        assert_eq!(ghost, interior);
     }
 }

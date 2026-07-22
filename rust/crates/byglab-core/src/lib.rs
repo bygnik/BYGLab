@@ -10,10 +10,10 @@
 //! states) for the quasi-1D compressible Euler equations — variable
 //! cross-sectional area (taper), wall friction, and wall heat transfer are
 //! all supported — over networks of pipes joined by same-area junctions.
-//! This is the foundation phase of a larger effort — 0D cylinder +
-//! combustion + valve models, multi-cylinder firing order, and branched
-//! exhaust manifolds are not implemented yet (see the root `README.md`'s
-//! roadmap section).
+//! Phase 2 (0D cylinder + combustion + valve flow + camshaft) is starting
+//! to land — [`crank_mechanism`] (piston kinematics) is the first piece;
+//! multi-cylinder firing order and branched exhaust manifolds are not
+//! implemented yet (see the root `README.md`'s roadmap section).
 //!
 //! # Module map
 //!
@@ -34,6 +34,11 @@
 //! - [`case`] — the serializable public API ([`case::PipeCaseConfig`]/
 //!   [`case::PipeCaseResult`]/[`case::run_pipe_case`]) that `byglab-cli` and
 //!   `byglab-wasm` bind to.
+//! - [`crank_mechanism`] — slider-crank kinematics ([`crank_mechanism::CrankMechanism`]):
+//!   exact (finite rod length, optional piston pin offset) piston
+//!   position/velocity/acceleration as a function of crank angle. Not yet
+//!   wired into `case`/the cylinder model — a standalone, independently
+//!   validated geometry layer the 0D cylinder model will build on.
 //!
 //! # Design for WebAssembly
 //!
@@ -60,6 +65,8 @@
 
 pub mod boundary;
 pub mod case;
+pub mod crank_mechanism;
+pub mod cylinder;
 pub mod gas;
 pub mod mesh;
 pub mod network;
@@ -71,6 +78,8 @@ pub mod source_terms;
 
 pub use boundary::BoundaryCondition;
 pub use case::{run_pipe_case, PipeCaseConfig, PipeCaseResult, PipeResult, PipeSpec};
+pub use crank_mechanism::CrankMechanism;
+pub use cylinder::{Cylinder, CylinderState};
 pub use gas::{ConservedState, Flux, GasProperties, PrimitiveState};
 pub use mesh::{Cell, Mesh};
 pub use network::{Junction, PipeEnd, PipeEndRef, PipeNetwork};

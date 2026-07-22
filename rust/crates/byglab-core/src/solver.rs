@@ -103,6 +103,7 @@ mod tests {
             network.pipes[0].state.iter().map(|s| s.mass).sum::<f64>() * network.pipes[0].mesh.cells[0].width;
 
         let relative_error = (final_mass - initial_mass).abs() / initial_mass;
+        println!("closed pipe, constant area: mass conservation relative error {relative_error:e} ({:.6}%)", relative_error * 100.0);
         assert!(relative_error < 1e-4, "mass not conserved: relative error {relative_error:e}");
     }
 
