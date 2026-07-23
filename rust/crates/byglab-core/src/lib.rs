@@ -10,10 +10,16 @@
 //! states) for the quasi-1D compressible Euler equations — variable
 //! cross-sectional area (taper), wall friction, and wall heat transfer are
 //! all supported — over networks of pipes joined by same-area junctions.
-//! Phase 2 (0D cylinder + combustion + valve flow + camshaft) is starting
-//! to land — [`crank_mechanism`] (piston kinematics) is the first piece;
-//! multi-cylinder firing order and branched exhaust manifolds are not
-//! implemented yet (see the root `README.md`'s roadmap section).
+//! Phase 2 (0D cylinder + combustion + valve flow + camshaft) is underway
+//! — [`crank_mechanism`] (piston kinematics), [`cylinder`] (volume +
+//! motoring/fired-cycle/breathing energy balance), [`combustion`] (Wiebe
+//! heat release + Woschni wall heat transfer), [`camshaft`] (valve lift
+//! profile), [`valve`] (compressible orifice mass flow), and
+//! [`valve_port`] (binding a valve to a real 1D [`pipe::Pipe`] end, so a
+//! cylinder can breathe against genuine wave-propagating flow instead of
+//! only a fixed reservoir) are done. Multi-cylinder firing order and
+//! branched exhaust manifolds are not implemented yet (see the root
+//! `README.md`'s roadmap section).
 //!
 //! # Module map
 //!
@@ -36,9 +42,35 @@
 //!   `byglab-wasm` bind to.
 //! - [`crank_mechanism`] — slider-crank kinematics ([`crank_mechanism::CrankMechanism`]):
 //!   exact (finite rod length, optional piston pin offset) piston
-//!   position/velocity/acceleration as a function of crank angle. Not yet
-//!   wired into `case`/the cylinder model — a standalone, independently
-//!   validated geometry layer the 0D cylinder model will build on.
+//!   position/velocity/acceleration as a function of crank angle.
+//! - [`cylinder`] — 0D cylinder volume ([`cylinder::Cylinder`]) and
+//!   thermodynamic state ([`cylinder::CylinderState`]), with both a
+//!   motoring-only energy balance (validated against the exact isentropic
+//!   relation) and a fired-cycle energy balance (combustion + wall heat
+//!   transfer, validated against a real OpenWAM reference case).
+//! - [`combustion`] — Wiebe mass-fraction-burned heat release and Woschni
+//!   in-cylinder wall heat transfer; the source terms `cylinder`'s
+//!   fired-cycle integration adds to the motoring energy balance.
+//! - [`camshaft`] — valve lift as a function of crank angle
+//!   ([`camshaft::CamProfile`]).
+//! - [`camshaft_presets`] — real BMW S54 camshaft grind data ingested
+//!   directly from official Schrick data sheets (duration, lift, and
+//!   installed timing for 10 grinds spanning low/medium/high street
+//!   intake and exhaust), not estimated.
+//! - [`valve`] — poppet valve curtain area and quasi-steady compressible
+//!   orifice mass flow rate ([`valve::mass_flow_rate`]); the source term
+//!   `cylinder`'s breathing integration adds to the motoring energy
+//!   balance (mass exchange with an external reservoir/pipe, not yet
+//!   combined with combustion/wall heat transfer in the same integration).
+//! - [`valve_port`] — binds a [`valve::ValveGeometry`]/[`camshaft::CamProfile`]
+//!   pair to one end of a real [`pipe::Pipe`] ([`valve_port::ValvePort`]),
+//!   and drives a [`network::PipeNetwork`] and a [`cylinder::Cylinder`]
+//!   together one shared timestep at a time
+//!   ([`valve_port::step_pipe_cylinder`]/[`valve_port::run_pipe_cylinder_to_time`]).
+//!   Validated: exact (to floating-point precision) combined mass/energy
+//!   conservation over a short choked-flow window, an exact first-step
+//!   cross-check against the fixed-reservoir path's own analytic mass flow
+//!   rate, and the Left/Right sign convention.
 //!
 //! # Design for WebAssembly
 //!
@@ -64,7 +96,10 @@
 //! actual measured numbers.
 
 pub mod boundary;
+pub mod camshaft;
+pub mod camshaft_presets;
 pub mod case;
+pub mod combustion;
 pub mod crank_mechanism;
 pub mod cylinder;
 pub mod gas;
@@ -75,13 +110,18 @@ pub mod reconstruction;
 pub mod riemann;
 pub mod solver;
 pub mod source_terms;
+pub mod valve;
+pub mod valve_port;
 
 pub use boundary::BoundaryCondition;
+pub use camshaft::CamProfile;
 pub use case::{run_pipe_case, PipeCaseConfig, PipeCaseResult, PipeResult, PipeSpec};
 pub use crank_mechanism::CrankMechanism;
 pub use cylinder::{Cylinder, CylinderState};
 pub use gas::{ConservedState, Flux, GasProperties, PrimitiveState};
 pub use mesh::{Cell, Mesh};
-pub use network::{Junction, PipeEnd, PipeEndRef, PipeNetwork};
+pub use network::{ExternalPortFlux, Junction, PipeEnd, PipeEndRef, PipeNetwork};
 pub use pipe::Pipe;
 pub use source_terms::WallProperties;
+pub use valve::ValveGeometry;
+pub use valve_port::{run_pipe_cylinder_to_time, step_pipe_cylinder, ValvePort};

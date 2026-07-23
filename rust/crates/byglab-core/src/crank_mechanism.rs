@@ -123,7 +123,21 @@ impl CrankMechanism {
     /// when `piston_pin_offset` is zero (by symmetry); Newton's method
     /// converges in a handful of iterations otherwise, since the
     /// offset-induced shift is small for any physically realistic offset.
+    ///
+    /// Degenerate case: a zero crank radius (`crank_radius == 0.0`) is a
+    /// legitimate way to model a rigid, non-moving 0D element (nothing
+    /// ever displaces, e.g. a fixed-volume control volume built by reusing
+    /// this same kinematics code rather than a separate code path) — but
+    /// there both `dx/dpsi` and `d^2x/dpsi^2` are identically zero
+    /// (position is constant everywhere), so the Newton step would
+    /// otherwise divide `0.0/0.0 = NaN` and poison every subsequent
+    /// calculation. Every angle is trivially an "extremum" of a constant
+    /// function, so `initial_guess` itself is as valid a reference as any
+    /// other — returned directly, skipping the Newton iteration entirely.
     fn solve_for_true_extremum(&self, initial_guess: f64) -> f64 {
+        if self.crank_radius == 0.0 {
+            return initial_guess;
+        }
         let mut psi = initial_guess;
         for _ in 0..50 {
             let velocity_term = self.position_derivative_at_reference_angle(psi);
@@ -399,5 +413,23 @@ mod tests {
         let mechanism = s54b32_mechanism();
         let bdc_angle = mechanism.crank_angle_of_bottom_dead_center();
         assert!((bdc_angle - PI).abs() < 1e-12, "expected exactly pi, got {bdc_angle}");
+    }
+
+    #[test]
+    fn zero_crank_radius_does_not_produce_nan() {
+        // A zero-stroke mechanism is a legitimate way to model a rigid,
+        // non-moving 0D element by reusing this kinematics code (position
+        // is constant everywhere) - the Newton solve for true TDC must not
+        // divide 0.0/0.0 in this degenerate case (both derivatives are
+        // identically zero when nothing moves), which would otherwise
+        // poison every subsequent position/velocity/acceleration query
+        // with NaN.
+        let mechanism = CrankMechanism::new(0.0, 0.139, 0.0);
+        assert!(!mechanism.piston_position_from_crank_center(0.5).is_nan());
+        assert!(!mechanism.piston_displacement_from_top_dead_center(0.5).is_nan());
+        assert_eq!(mechanism.piston_displacement_from_top_dead_center(0.5), 0.0, "a rigid mechanism should show exactly zero displacement everywhere");
+        assert!(!mechanism.piston_velocity(0.5, 500.0).is_nan());
+        assert_eq!(mechanism.piston_velocity(0.5, 500.0), 0.0);
+        assert!(!mechanism.crank_angle_of_bottom_dead_center().is_nan());
     }
 }

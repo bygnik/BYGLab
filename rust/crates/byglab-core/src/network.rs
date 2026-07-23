@@ -60,6 +60,28 @@ pub struct Junction {
     pub b: PipeEndRef,
 }
 
+/// A pipe end whose reconstruction neighbor and resulting face flux are
+/// supplied by the caller for one step, instead of being derived from that
+/// end's own [`crate::boundary::BoundaryCondition`] or a [`Junction`].
+///
+/// This generalizes exactly the mechanism [`Junction`] already uses for a
+/// pipe-to-pipe connection (override the reconstruction neighbor, then
+/// override the resulting face flux) to a caller-supplied "other side" that
+/// isn't necessarily another `Pipe` in this network at all — e.g.
+/// `valve_port.rs`'s cylinder-coupling code, which computes a flux from a
+/// compressible-orifice mass flow rate rather than a symmetric HLLC solve.
+/// `PipeNetwork` doesn't know or care what produced `flux`; it only applies
+/// it exactly like a junction's shared flux. The caller is responsible for
+/// keeping whatever external state `flux` is exchanged with (e.g. a
+/// cylinder's mass/energy) consistent with this same value, the same way a
+/// junction's "same flux on both sides" is what gives it exact conservation.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ExternalPortFlux {
+    pub end: PipeEndRef,
+    pub neighbor_state: PrimitiveState,
+    pub flux: Flux,
+}
+
 /// A collection of pipes plus the junctions connecting them.
 ///
 /// Owns the network-wide view needed for correct multi-pipe stepping:
@@ -93,7 +115,16 @@ impl PipeNetwork {
     /// second-order-accurate flux instead of each pipe's own boundary
     /// condition.
     pub fn advance(&mut self, dt: f64, gas: &GasProperties) {
-        let (all_fluxes, all_reconstructed) = self.all_face_fluxes(dt, gas);
+        self.advance_with_external_fluxes(dt, gas, &[]);
+    }
+
+    /// Like [`Self::advance`], but additionally overrides the reconstruction
+    /// neighbor and face flux at each [`ExternalPortFlux`] in `external` —
+    /// see its doc comment. A pipe end listed here must not also be a
+    /// [`Junction`] end; behavior is unspecified (last write wins) if both
+    /// try to control the same end.
+    pub fn advance_with_external_fluxes(&mut self, dt: f64, gas: &GasProperties, external: &[ExternalPortFlux]) {
+        let (all_fluxes, all_reconstructed) = self.all_face_fluxes(dt, gas, external);
         for ((pipe, fluxes), reconstructed) in self.pipes.iter_mut().zip(&all_fluxes).zip(&all_reconstructed) {
             pipe.apply_face_fluxes(fluxes, reconstructed, dt, gas);
         }
@@ -106,13 +137,21 @@ impl PipeNetwork {
     /// pressures rather than recomputing them).
     ///
     /// Two passes: first, determine the correct neighbor state just past
-    /// each pipe end (a pipe's own boundary condition by default, or the
-    /// joined pipe's real boundary cell for a junction-coupled end) and
+    /// each pipe end (a pipe's own boundary condition by default, the joined
+    /// pipe's real boundary cell for a junction-coupled end, or a caller-
+    /// supplied state for an [`ExternalPortFlux`]-coupled end) and
     /// reconstruct every pipe using those neighbors; then assemble each
-    /// pipe's own fluxes, and finally overwrite junction-coupled end faces
-    /// with a flux built from *both* connected pipes' reconstructed edges
-    /// (see this module's doc comment for why that second step matters).
-    fn all_face_fluxes(&self, dt: f64, gas: &GasProperties) -> (Vec<Vec<Flux>>, Vec<Vec<ReconstructedCell>>) {
+    /// pipe's own fluxes, and finally overwrite junction- and external-
+    /// port-coupled end faces with their respective shared/supplied flux
+    /// (see this module's doc comment for why the junction case matters;
+    /// [`ExternalPortFlux`]'s flux is used as-is, since it was already
+    /// computed externally rather than needing an HLLC solve here).
+    fn all_face_fluxes(
+        &self,
+        dt: f64,
+        gas: &GasProperties,
+        external: &[ExternalPortFlux],
+    ) -> (Vec<Vec<Flux>>, Vec<Vec<ReconstructedCell>>) {
         let mut left_neighbors: Vec<PrimitiveState> =
             self.pipes.iter().map(|pipe| pipe.own_left_neighbor(gas)).collect();
         let mut right_neighbors: Vec<PrimitiveState> =
@@ -123,6 +162,11 @@ impl PipeNetwork {
             self.validate_junction_area_match(junction, a, b);
             *Self::neighbor_slot(&mut left_neighbors, &mut right_neighbors, a) = self.end_state(b, gas);
             *Self::neighbor_slot(&mut left_neighbors, &mut right_neighbors, b) = self.end_state(a, gas);
+        }
+
+        for external_flux in external {
+            *Self::neighbor_slot(&mut left_neighbors, &mut right_neighbors, external_flux.end) =
+                external_flux.neighbor_state;
         }
 
         let reconstructed: Vec<Vec<ReconstructedCell>> = self
@@ -147,6 +191,10 @@ impl PipeNetwork {
             let shared_flux = hllc_flux(a_edge, b_edge, gas);
             Self::set_end_flux(&mut fluxes, a, shared_flux);
             Self::set_end_flux(&mut fluxes, b, shared_flux);
+        }
+
+        for external_flux in external {
+            Self::set_end_flux(&mut fluxes, external_flux.end, external_flux.flux);
         }
 
         (fluxes, reconstructed)
@@ -292,7 +340,7 @@ mod tests {
     fn matched_states_across_a_junction_produce_zero_net_flux() {
         let gas = GasProperties::AIR;
         let network = two_pipe_network(150_000.0, 150_000.0);
-        let (fluxes, _) = network.all_face_fluxes(1e-6, &gas);
+        let (fluxes, _) = network.all_face_fluxes(1e-6, &gas, &[]);
         let junction_flux = fluxes[0][fluxes[0].len() - 1];
         assert!(junction_flux.mass.abs() < 1e-9);
     }
@@ -306,6 +354,51 @@ mod tests {
             a: PipeEndRef { pipe_index: 0, end: PipeEnd::Left },
             b: PipeEndRef { pipe_index: 1, end: PipeEnd::Left },
         };
-        network.all_face_fluxes(1e-6, &gas);
+        network.all_face_fluxes(1e-6, &gas, &[]);
+    }
+
+    #[test]
+    fn external_port_flux_is_applied_at_the_named_end_instead_of_the_boundary_condition() {
+        // A single pipe with `ClosedEnd` at both ends (which would normally
+        // produce zero net mass change) but an `ExternalPortFlux` overriding
+        // its Right end with a hand-picked, nonzero outflow. Confirms the
+        // new mechanism actually reaches `apply_face_fluxes` and is not
+        // silently ignored or overridden back by the boundary condition.
+        let gas = GasProperties::AIR;
+        let initial_pressure = 150_000.0;
+        let mut network = PipeNetwork::single_pipe(Pipe::uniform_initial_state(
+            Mesh::uniform(1.0, 0.05, 0.01),
+            air_at_rest(initial_pressure),
+            &gas,
+            BoundaryCondition::ClosedEnd,
+            BoundaryCondition::ClosedEnd,
+        ));
+
+        let right_end = PipeEndRef { pipe_index: 0, end: PipeEnd::Right };
+        let outflow_state = PrimitiveState { density: 1.2, velocity: 50.0, pressure: initial_pressure };
+        let outflow_flux = outflow_state.to_conserved(&gas).physical_flux(&gas);
+        assert!(outflow_flux.mass > 0.0, "test setup should be an outflow at the Right end");
+
+        let total_mass = |pipe: &Pipe| -> f64 {
+            pipe.state.iter().zip(&pipe.mesh.cells).map(|(s, cell)| s.mass * cell.area * cell.width).sum()
+        };
+
+        let dt = 1e-7;
+        let mass_before = total_mass(&network.pipes[0]);
+        network.advance_with_external_fluxes(
+            dt,
+            &gas,
+            &[ExternalPortFlux { end: right_end, neighbor_state: outflow_state, flux: outflow_flux }],
+        );
+        let mass_after = total_mass(&network.pipes[0]);
+
+        let face_area = network.pipes[0].mesh.face_areas[network.pipes[0].mesh.face_areas.len() - 1];
+        let expected_mass_change = -outflow_flux.mass * face_area * dt;
+        let actual_mass_change = mass_after - mass_before;
+        let relative_error = (actual_mass_change - expected_mass_change).abs() / expected_mass_change.abs();
+        assert!(
+            relative_error < 1e-9,
+            "expected mass change {expected_mass_change:e}, got {actual_mass_change:e} (relative error {relative_error:e})"
+        );
     }
 }
