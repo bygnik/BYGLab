@@ -17,9 +17,11 @@
 //! profile), [`valve`] (compressible orifice mass flow), and
 //! [`valve_port`] (binding a valve to a real 1D [`pipe::Pipe`] end, so a
 //! cylinder can breathe against genuine wave-propagating flow instead of
-//! only a fixed reservoir) are done. Multi-cylinder firing order and
-//! branched exhaust manifolds are not implemented yet (see the root
-//! `README.md`'s roadmap section).
+//! only a fixed reservoir) are done. [`branch_junction`] generalizes
+//! [`network::Junction`]'s 2-pipe, same-area connection to any number of
+//! pipes with any areas (a single intake/exhaust runner splitting into
+//! several, or several merging into one). Multi-cylinder firing order is
+//! not implemented yet (see the root `README.md`'s roadmap section).
 //!
 //! # Module map
 //!
@@ -36,6 +38,18 @@
 //! - [`boundary`] — how a pipe's end is terminated ([`boundary::BoundaryCondition`]).
 //! - [`pipe`] — a single pipe: mesh + gas state + boundary conditions + wall properties.
 //! - [`network`] — multiple pipes joined by [`network::Junction`]s.
+//! - [`branch_junction`] — an N-way [`branch_junction::BranchJunction`]
+//!   generalizing `Junction` to any number of pipes/areas, via a
+//!   method-of-characteristics closure (each leg's own Riemann invariant
+//!   plus a shared junction pressure, solved by bisection). Validated:
+//!   exact structural mass conservation, a symmetric N-branch split/merge
+//!   matching the closed-form linear-acoustics junction-pressure
+//!   prediction (error shrinking ~linearly with disturbance amplitude), a
+//!   quantified (not just sanity-checked) N=2 regression against
+//!   `Junction`'s own exact HLLC solve, and a measured (not assumed-zero)
+//!   energy-conservation residual — two independently-wrong closures were
+//!   tried and disproved by direct numerical scans before landing on this
+//!   one; see the module's own doc comment for what failed and why.
 //! - [`solver`] — the explicit time-stepping driver.
 //! - [`case`] — the serializable public API ([`case::PipeCaseConfig`]/
 //!   [`case::PipeCaseResult`]/[`case::run_pipe_case`]) that `byglab-cli` and
@@ -96,6 +110,7 @@
 //! actual measured numbers.
 
 pub mod boundary;
+pub mod branch_junction;
 pub mod camshaft;
 pub mod camshaft_presets;
 pub mod case;
@@ -103,6 +118,7 @@ pub mod combustion;
 pub mod crank_mechanism;
 pub mod cylinder;
 pub mod gas;
+pub mod lossy_branch_junction;
 pub mod mesh;
 pub mod network;
 pub mod pipe;
@@ -114,6 +130,7 @@ pub mod valve;
 pub mod valve_port;
 
 pub use boundary::BoundaryCondition;
+pub use branch_junction::{resolve_branch_junction, BranchJunction};
 pub use camshaft::CamProfile;
 pub use case::{run_pipe_case, PipeCaseConfig, PipeCaseResult, PipeResult, PipeSpec};
 pub use crank_mechanism::CrankMechanism;

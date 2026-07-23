@@ -6,5 +6,6 @@
 **/*.egg-info
 Unconfirmed*.crdownload
 **/*.pdf
+**/*blair*.txt
 rust/target/
 rust/crates/*/pkg/
