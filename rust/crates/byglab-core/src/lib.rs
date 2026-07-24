@@ -70,24 +70,42 @@
 //!   exact (finite rod length, optional piston pin offset) piston
 //!   position/velocity/acceleration as a function of crank angle.
 //! - [`cylinder`] — 0D cylinder volume ([`cylinder::Cylinder`]) and
-//!   thermodynamic state ([`cylinder::CylinderState`]), with both a
-//!   motoring-only energy balance (validated against the exact isentropic
-//!   relation) and a fired-cycle energy balance (combustion + wall heat
-//!   transfer, validated against a real OpenWAM reference case).
+//!   thermodynamic state ([`cylinder::CylinderState`]), with a motoring-
+//!   only energy balance (validated against the exact isentropic
+//!   relation), a fired-cycle energy balance (combustion + wall heat
+//!   transfer, validated against a real OpenWAM reference case), single-
+//!   and dual-valve breathing (mass exchange with fixed reservoirs,
+//!   validated against exact closed-form choked-flow behavior), and now
+//!   [`cylinder::Cylinder::integrate_full_cycle`] - motoring + combustion
+//!   + wall heat transfer + an independent intake AND exhaust valve event
+//!   in one call, enough to integrate a genuine 4-stroke cycle. Its
+//!   Woschni "motored reference" anchor (needed only during the Wiebe
+//!   burn window) is resolved via an internal pre-pass through the dual-
+//!   valve breathing integration when starting before intake-valve-
+//!   closing, rather than a hand-stitched two-phase integrator - see the
+//!   module's own doc comment for why that's provably safe here.
+//!   Cross-checked against the real OpenWAM S54 2500rpm case's own full-
+//!   cycle trace (not just its already-validated closed-cycle portion).
 //! - [`combustion`] — Wiebe mass-fraction-burned heat release and Woschni
 //!   in-cylinder wall heat transfer; the source terms `cylinder`'s
-//!   fired-cycle integration adds to the motoring energy balance.
+//!   fired-cycle and full-cycle integrations add to the motoring energy
+//!   balance.
 //! - [`camshaft`] — valve lift as a function of crank angle
-//!   ([`camshaft::CamProfile`]).
+//!   ([`camshaft::CamProfile`]), including [`camshaft::CamProfile::shifted_by`]
+//!   for reconciling the two crank-angle conventions in play: real
+//!   ingested cam data (`camshaft_presets`) is referenced to *gas-exchange*
+//!   TDC=0, while `combustion`'s Wiebe timing is referenced to *firing*
+//!   TDC=0 - the needed shift is `+-2*pi`, and NOT the same sign for
+//!   intake vs. exhaust events (confirmed against real data, not assumed
+//!   uniform - see `camshaft_presets`'s own tests).
 //! - [`camshaft_presets`] — real BMW S54 camshaft grind data ingested
 //!   directly from official Schrick data sheets (duration, lift, and
 //!   installed timing for 10 grinds spanning low/medium/high street
 //!   intake and exhaust), not estimated.
 //! - [`valve`] — poppet valve curtain area and quasi-steady compressible
 //!   orifice mass flow rate ([`valve::mass_flow_rate`]); the source term
-//!   `cylinder`'s breathing integration adds to the motoring energy
-//!   balance (mass exchange with an external reservoir/pipe, not yet
-//!   combined with combustion/wall heat transfer in the same integration).
+//!   `cylinder`'s breathing integrations add to the motoring energy
+//!   balance (mass exchange with an external reservoir/pipe).
 //! - [`valve_port`] — binds a [`valve::ValveGeometry`]/[`camshaft::CamProfile`]
 //!   pair to one end of a real [`pipe::Pipe`] ([`valve_port::ValvePort`]),
 //!   and drives a [`network::PipeNetwork`] and a [`cylinder::Cylinder`]

@@ -401,6 +401,45 @@ mod tests {
     }
 
     #[test]
+    fn wall_heat_transfer_rate_at_is_independent_of_the_ivc_anchor_outside_the_wiebe_window() {
+        // Load-bearing property for `cylinder.rs`'s unified full-cycle
+        // integrator: it resolves the Woschni "motored reference" anchor
+        // (pressure_at_ivc/volume_at_ivc) via a pre-pass ONLY when
+        // integration starts before actual IVC, then runs a SINGLE
+        // derivative across the whole domain rather than switching
+        // derivatives at IVC - which is only valid if the anchor is
+        // provably inert everywhere combustion hasn't started/finished.
+        // `combustion_turbulence_active` gates the ENTIRE
+        // `combustion_turbulence_coefficient` term to zero outside the
+        // Wiebe burn window, and `delta_pressure_pa` (the only other place
+        // the anchor is used) is multiplied by that same zeroed
+        // coefficient - so two wildly different anchors must give
+        // bit-identical output outside the window, checked directly here
+        // rather than only reasoned about.
+        let wiebe = s54_wiebe();
+        let woschni = WoschniParameters { cw1: 2.28, cw2: 0.00324, combustion_turbulence_coefficient: 0.001 };
+        let walls = WallTemperatures { piston_kelvin: 450.0, head_kelvin: 550.0, liner_kelvin: 420.0 };
+
+        let crank_angle_before_ignition = wiebe.start_angle_radians - 100.0_f64.to_radians();
+        let crank_angle_after_burnout = wiebe.start_angle_radians + wiebe.duration_radians + 100.0_f64.to_radians();
+
+        for crank_angle in [crank_angle_before_ignition, crank_angle_after_burnout] {
+            let rate_with_anchor_a = wall_heat_transfer_rate_at(
+                &wiebe, &woschni, &walls, crank_angle, 20e5, 900.0, 0.087, 7.58, 15e5, 5.4e-4, 4.0e-4, 5.4e-4, 5.1e-4, 287.0, 0.0059, 0.0059, 0.01,
+            );
+            // Wildly different anchor: 10x the pressure, 1/10th the volume.
+            let rate_with_anchor_b = wall_heat_transfer_rate_at(
+                &wiebe, &woschni, &walls, crank_angle, 20e5, 900.0, 0.087, 7.58, 150e5, 5.4e-5, 4.0e-4, 5.4e-4, 5.1e-4, 287.0, 0.0059, 0.0059, 0.01,
+            );
+            assert_eq!(
+                rate_with_anchor_a, rate_with_anchor_b,
+                "crank_angle={:.1}deg: expected identical wall heat transfer rate regardless of the IVC anchor outside the Wiebe window",
+                crank_angle.to_degrees()
+            );
+        }
+    }
+
+    #[test]
     fn liner_area_formula_matches_the_pi_bore_displacement_identity() {
         // A * displacement, with A = pi/4*bore^2, should equal pi*bore*displacement
         // when expressed as 4*(V-Vcc)/bore - the identity this module's doc comment

@@ -246,17 +246,55 @@ impl Cylinder {
         state
     }
 
-    /// `(dm/dtheta, dU/dtheta)` for the breathing energy balance:
-    /// motoring's `-p*dV/dtheta` plus mass/enthalpy exchange with the
-    /// external reservoir through the valve. The valve's mass flow rate
-    /// is wired as `mass_flow_rate(reservoir, cylinder, ...)` so a
-    /// positive result already means "into the cylinder," matching
-    /// `dm/dtheta`'s sign directly; the flow's specific enthalpy is taken
-    /// from whichever side is upstream (the reservoir's, if flow is
+    /// Mass flow rate and upstream specific enthalpy through one valve
+    /// event at the given crank angle/cylinder state - shared by
+    /// [`Self::breathing_derivatives`] (one valve), the dual-valve
+    /// breathing derivative (two valves), and the full-cycle derivative
+    /// (two valves + combustion), so this exact physics is coded in
+    /// exactly one place. The valve's mass flow rate is wired as
+    /// `mass_flow_rate(reservoir, cylinder, ...)` so a positive result
+    /// already means "into the cylinder"; the flow's specific enthalpy is
+    /// taken from whichever side is upstream (the reservoir's, if flow is
     /// entering the cylinder; the cylinder's own, if leaving) — the
     /// standard open-system first law for a control volume with mass
     /// crossing its boundary, not internal energy (a classic mistake this
-    /// was checked against during design review).
+    /// was checked against during design review). Returns raw
+    /// `(mass_flow_rate_kg_per_s, upstream_specific_enthalpy)`, not yet
+    /// divided by angular velocity - callers combine this with whichever
+    /// other valve event(s) are active before converting to a
+    /// crank-angle-domain rate, since angular velocity is a property of
+    /// the whole operating point, not of one valve event.
+    fn valve_event_flow(
+        &self,
+        gas: &GasProperties,
+        event: &ValveEventParameters,
+        crank_angle_from_tdc_radians: f64,
+        cylinder_pressure: f64,
+        cylinder_temperature_kelvin: f64,
+    ) -> (f64, f64) {
+        let lift = camshaft::lift_at(&event.cam, crank_angle_from_tdc_radians);
+        let curtain_area = valve::curtain_area(&event.valve, lift);
+        let effective_area = event.discharge_coefficient * curtain_area;
+
+        let mass_flow_rate_kg_per_s = valve::mass_flow_rate(
+            event.reservoir_pressure,
+            event.reservoir_temperature_kelvin,
+            cylinder_pressure,
+            cylinder_temperature_kelvin,
+            effective_area,
+            gas,
+        );
+
+        let upstream_temperature_kelvin =
+            if mass_flow_rate_kg_per_s >= 0.0 { event.reservoir_temperature_kelvin } else { cylinder_temperature_kelvin };
+        let upstream_specific_enthalpy = gas.gamma * gas.gas_constant * upstream_temperature_kelvin / (gas.gamma - 1.0);
+
+        (mass_flow_rate_kg_per_s, upstream_specific_enthalpy)
+    }
+
+    /// `(dm/dtheta, dU/dtheta)` for the breathing energy balance:
+    /// motoring's `-p*dV/dtheta` plus mass/enthalpy exchange with the
+    /// external reservoir through the valve (see [`Self::valve_event_flow`]).
     fn breathing_derivatives(
         &self,
         gas: &GasProperties,
@@ -270,25 +308,18 @@ impl Cylinder {
 
         let motoring_term = -pressure * self.volume_derivative_wrt_crank_angle(crank_angle_from_tdc_radians);
 
-        let lift = camshaft::lift_at(&params.cam, crank_angle_from_tdc_radians);
-        let curtain_area = valve::curtain_area(&params.valve, lift);
-        let effective_area = params.discharge_coefficient * curtain_area;
-
-        let mass_flow_rate_kg_per_s = valve::mass_flow_rate(
-            params.reservoir_pressure,
-            params.reservoir_temperature_kelvin,
-            pressure,
-            temperature_kelvin,
-            effective_area,
-            gas,
-        );
-
-        let upstream_temperature_kelvin =
-            if mass_flow_rate_kg_per_s >= 0.0 { params.reservoir_temperature_kelvin } else { temperature_kelvin };
-        let flow_specific_enthalpy = gas.gamma * gas.gas_constant * upstream_temperature_kelvin / (gas.gamma - 1.0);
+        let event = ValveEventParameters {
+            cam: params.cam,
+            valve: params.valve,
+            discharge_coefficient: params.discharge_coefficient,
+            reservoir_pressure: params.reservoir_pressure,
+            reservoir_temperature_kelvin: params.reservoir_temperature_kelvin,
+        };
+        let (mass_flow_rate_kg_per_s, upstream_specific_enthalpy) =
+            self.valve_event_flow(gas, &event, crank_angle_from_tdc_radians, pressure, temperature_kelvin);
 
         let dm_dtheta = mass_flow_rate_kg_per_s / params.angular_velocity_radians_per_second;
-        let du_dtheta = motoring_term + flow_specific_enthalpy * dm_dtheta;
+        let du_dtheta = motoring_term + upstream_specific_enthalpy * dm_dtheta;
 
         (dm_dtheta, du_dtheta)
     }
@@ -333,6 +364,279 @@ impl Cylinder {
         }
         state
     }
+
+    /// `(dm/dtheta, dU/dtheta)` for two independent valve events (each
+    /// against its own reservoir) plus motoring - no special-casing for
+    /// simultaneous opening (valve overlap near gas-exchange TDC): summing
+    /// two independent [`Self::valve_event_flow`] calls handles it by
+    /// construction, including exhaust backflow into the cylinder or
+    /// cylinder gas escaping out both valves at once. Known, stated
+    /// limitation: a lumped single-volume model with two independent
+    /// fixed reservoirs cannot represent real port-to-port scavenging
+    /// through the cylinder during overlap - that's what the separate,
+    /// real-1D-pipe-coupled path in `valve_port.rs` exists for.
+    fn dual_valve_breathing_derivatives(
+        &self,
+        gas: &GasProperties,
+        state: &CylinderState,
+        crank_angle_from_tdc_radians: f64,
+        params: &DualValveBreathingParameters,
+    ) -> (f64, f64) {
+        let volume = self.volume(crank_angle_from_tdc_radians);
+        let pressure = state.pressure(volume, gas);
+        let temperature_kelvin = state.temperature_kelvin(gas);
+
+        let motoring_term = -pressure * self.volume_derivative_wrt_crank_angle(crank_angle_from_tdc_radians);
+
+        let (intake_mdot, intake_upstream_enthalpy) =
+            self.valve_event_flow(gas, &params.intake, crank_angle_from_tdc_radians, pressure, temperature_kelvin);
+        let (exhaust_mdot, exhaust_upstream_enthalpy) =
+            self.valve_event_flow(gas, &params.exhaust, crank_angle_from_tdc_radians, pressure, temperature_kelvin);
+
+        let intake_dm_dtheta = intake_mdot / params.angular_velocity_radians_per_second;
+        let exhaust_dm_dtheta = exhaust_mdot / params.angular_velocity_radians_per_second;
+
+        let dm_dtheta = intake_dm_dtheta + exhaust_dm_dtheta;
+        let du_dtheta =
+            motoring_term + intake_upstream_enthalpy * intake_dm_dtheta + exhaust_upstream_enthalpy * exhaust_dm_dtheta;
+
+        (dm_dtheta, du_dtheta)
+    }
+
+    fn dual_valve_breathing_rk4_step(
+        &self,
+        gas: &GasProperties,
+        state: CylinderState,
+        theta: f64,
+        dtheta: f64,
+        params: &DualValveBreathingParameters,
+    ) -> CylinderState {
+        let (k1_m, k1_u) = self.dual_valve_breathing_derivatives(gas, &state, theta, params);
+        let state2 = CylinderState { mass: state.mass + 0.5 * dtheta * k1_m, internal_energy: state.internal_energy + 0.5 * dtheta * k1_u };
+        let (k2_m, k2_u) = self.dual_valve_breathing_derivatives(gas, &state2, theta + 0.5 * dtheta, params);
+        let state3 = CylinderState { mass: state.mass + 0.5 * dtheta * k2_m, internal_energy: state.internal_energy + 0.5 * dtheta * k2_u };
+        let (k3_m, k3_u) = self.dual_valve_breathing_derivatives(gas, &state3, theta + 0.5 * dtheta, params);
+        let state4 = CylinderState { mass: state.mass + dtheta * k3_m, internal_energy: state.internal_energy + dtheta * k3_u };
+        let (k4_m, k4_u) = self.dual_valve_breathing_derivatives(gas, &state4, theta + dtheta, params);
+        let new_mass = state.mass + (dtheta / 6.0) * (k1_m + 2.0 * k2_m + 2.0 * k3_m + k4_m);
+        let new_energy = state.internal_energy + (dtheta / 6.0) * (k1_u + 2.0 * k2_u + 2.0 * k3_u + k4_u);
+        CylinderState { mass: new_mass, internal_energy: new_energy }
+    }
+
+    /// Integrates the dual-valve breathing energy balance (motoring +
+    /// mass/enthalpy exchange with two independent reservoirs through an
+    /// intake AND an exhaust valve) from `theta_start` to `theta_end`,
+    /// using the same classic 4th-order Runge-Kutta scheme as
+    /// [`Self::integrate_breathing`] (which this does not modify or call
+    /// - a fully separate path; setting either `discharge_coefficient` to
+    /// `0.0` reduces this exactly to [`Self::integrate_breathing`]'s
+    /// single-valve behavior on the other valve, since both share
+    /// [`Self::valve_event_flow`]). Does not (yet) combine with combustion
+    /// - see [`Self::integrate_full_cycle`] for that.
+    pub fn integrate_dual_valve_breathing(
+        &self,
+        gas: &GasProperties,
+        initial_state: CylinderState,
+        theta_start: f64,
+        theta_end: f64,
+        step_count: usize,
+        params: &DualValveBreathingParameters,
+    ) -> CylinderState {
+        let dtheta = (theta_end - theta_start) / step_count as f64;
+        let mut state = initial_state;
+        let mut theta = theta_start;
+        for _ in 0..step_count {
+            state = self.dual_valve_breathing_rk4_step(gas, state, theta, dtheta, params);
+            theta += dtheta;
+        }
+        state
+    }
+
+    /// `(dm/dtheta, dU/dtheta)` for the full-cycle energy balance:
+    /// motoring + Wiebe combustion + Woschni wall heat transfer (anchored
+    /// at `pressure_at_ivc`/`volume_at_ivc`, fixed for the whole
+    /// integration - same convention as [`Self::fired_energy_derivative`])
+    /// + two independent valve events (see [`Self::valve_event_flow`]).
+    /// No phase-branching on crank angle: `combustion_term` and
+    /// `wall_heat_transfer_term` are themselves already zero outside the
+    /// Wiebe burn window (confirmed directly by
+    /// `combustion::tests::wall_heat_transfer_rate_at_is_independent_of_the_ivc_anchor_outside_the_wiebe_window`),
+    /// so one derivative is correct everywhere, including before IVC.
+    #[allow(clippy::too_many_arguments)]
+    fn full_cycle_derivatives(
+        &self,
+        gas: &GasProperties,
+        state: &CylinderState,
+        crank_angle_from_tdc_radians: f64,
+        params: &FullCycleParameters,
+        pressure_at_ivc: f64,
+        volume_at_ivc: f64,
+    ) -> (f64, f64) {
+        let volume = self.volume(crank_angle_from_tdc_radians);
+        let pressure = state.pressure(volume, gas);
+        let temperature_kelvin = state.temperature_kelvin(gas);
+
+        let motoring_term = -pressure * self.volume_derivative_wrt_crank_angle(crank_angle_from_tdc_radians);
+        let combustion_term = combustion::heat_release_rate(&params.wiebe, crank_angle_from_tdc_radians, params.total_heat_release_joules);
+
+        let piston_area = self.piston_area();
+        let unit_displaced_volume = piston_area * 2.0 * self.crank_mechanism.crank_radius;
+        let liner_area = std::f64::consts::PI
+            * self.bore
+            * self.crank_mechanism.piston_displacement_from_top_dead_center(crank_angle_from_tdc_radians);
+        let wall_heat_transfer_rate_watts = combustion::wall_heat_transfer_rate_at(
+            &params.wiebe,
+            &params.woschni,
+            &params.walls,
+            crank_angle_from_tdc_radians,
+            pressure,
+            temperature_kelvin,
+            self.bore,
+            self.mean_piston_speed(params.angular_velocity_radians_per_second),
+            pressure_at_ivc,
+            volume_at_ivc,
+            volume,
+            unit_displaced_volume,
+            state.mass,
+            params.gas_constant,
+            piston_area,
+            piston_area,
+            liner_area,
+        );
+        let wall_heat_transfer_term = wall_heat_transfer_rate_watts / params.angular_velocity_radians_per_second;
+
+        let (intake_mdot, intake_upstream_enthalpy) =
+            self.valve_event_flow(gas, &params.intake, crank_angle_from_tdc_radians, pressure, temperature_kelvin);
+        let (exhaust_mdot, exhaust_upstream_enthalpy) =
+            self.valve_event_flow(gas, &params.exhaust, crank_angle_from_tdc_radians, pressure, temperature_kelvin);
+
+        let intake_dm_dtheta = intake_mdot / params.angular_velocity_radians_per_second;
+        let exhaust_dm_dtheta = exhaust_mdot / params.angular_velocity_radians_per_second;
+
+        let dm_dtheta = intake_dm_dtheta + exhaust_dm_dtheta;
+        let du_dtheta = motoring_term
+            + combustion_term
+            + wall_heat_transfer_term
+            + intake_upstream_enthalpy * intake_dm_dtheta
+            + exhaust_upstream_enthalpy * exhaust_dm_dtheta;
+
+        (dm_dtheta, du_dtheta)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn full_cycle_rk4_step(
+        &self,
+        gas: &GasProperties,
+        state: CylinderState,
+        theta: f64,
+        dtheta: f64,
+        params: &FullCycleParameters,
+        pressure_at_ivc: f64,
+        volume_at_ivc: f64,
+    ) -> CylinderState {
+        let (k1_m, k1_u) = self.full_cycle_derivatives(gas, &state, theta, params, pressure_at_ivc, volume_at_ivc);
+        let state2 = CylinderState { mass: state.mass + 0.5 * dtheta * k1_m, internal_energy: state.internal_energy + 0.5 * dtheta * k1_u };
+        let (k2_m, k2_u) = self.full_cycle_derivatives(gas, &state2, theta + 0.5 * dtheta, params, pressure_at_ivc, volume_at_ivc);
+        let state3 = CylinderState { mass: state.mass + 0.5 * dtheta * k2_m, internal_energy: state.internal_energy + 0.5 * dtheta * k2_u };
+        let (k3_m, k3_u) = self.full_cycle_derivatives(gas, &state3, theta + 0.5 * dtheta, params, pressure_at_ivc, volume_at_ivc);
+        let state4 = CylinderState { mass: state.mass + dtheta * k3_m, internal_energy: state.internal_energy + dtheta * k3_u };
+        let (k4_m, k4_u) = self.full_cycle_derivatives(gas, &state4, theta + dtheta, params, pressure_at_ivc, volume_at_ivc);
+        let new_mass = state.mass + (dtheta / 6.0) * (k1_m + 2.0 * k2_m + 2.0 * k3_m + k4_m);
+        let new_energy = state.internal_energy + (dtheta / 6.0) * (k1_u + 2.0 * k2_u + 2.0 * k3_u + k4_u);
+        CylinderState { mass: new_mass, internal_energy: new_energy }
+    }
+
+    /// Integrates a genuine full 4-stroke cycle (intake stroke,
+    /// compression, Wiebe combustion + Woschni wall heat transfer,
+    /// expansion, exhaust stroke) in one call - motoring + combustion +
+    /// two independent valve events, using the same classic 4th-order
+    /// Runge-Kutta scheme as every other integration mode in this file.
+    ///
+    /// The Woschni "motored reference" anchor (`pressure_at_ivc`/
+    /// `volume_at_ivc`) needs the state at ACTUAL intake-valve-closing
+    /// (`ivc_angle = params.intake.cam.opening_angle_radians +
+    /// params.intake.cam.duration_radians`), not necessarily
+    /// `initial_state`/`theta_start`, if the caller wants a continuous
+    /// integration starting before IVC (e.g. from intake-valve-opening or
+    /// gas-exchange TDC):
+    /// - If `theta_start >= ivc_angle`: the anchor is `initial_state`/
+    ///   `theta_start` directly - exactly [`Self::integrate_fired_cycle`]'s
+    ///   existing convention, a bit-for-bit backward-compatible reduction.
+    /// - Otherwise: [`Self::integrate_dual_valve_breathing`] (a real,
+    ///   independently-tested function, not a throwaway pre-pass) runs
+    ///   from `theta_start` to `ivc_angle` first to get the anchor state.
+    ///   The SAME single RK4 loop below then still covers the *entire*
+    ///   `[theta_start, theta_end]` domain (re-walking the pre-IVC region
+    ///   once more through the unified derivative is harmless - see
+    ///   `full_cycle_derivatives`'s own doc comment for why).
+    ///
+    /// `step_count` covers that one real RK4 loop; the internal anchor
+    /// pre-pass (only run when needed) derives its own, coarser step count
+    /// proportionally rather than exposing a second parameter - the
+    /// anchor only feeds an empirical correlation term active during the
+    /// burn window, so it doesn't need RK4-grade precision, just a
+    /// reasonable pressure/volume estimate.
+    pub fn integrate_full_cycle(
+        &self,
+        gas: &GasProperties,
+        initial_state: CylinderState,
+        theta_start: f64,
+        theta_end: f64,
+        step_count: usize,
+        params: &FullCycleParameters,
+    ) -> CylinderState {
+        let ivc_angle = params.intake.cam.opening_angle_radians + params.intake.cam.duration_radians;
+
+        let (pressure_at_ivc, volume_at_ivc) = if theta_start >= ivc_angle {
+            (initial_state.pressure(self.volume(theta_start), gas), self.volume(theta_start))
+        } else {
+            let breathing_params = DualValveBreathingParameters {
+                intake: params.intake,
+                exhaust: params.exhaust,
+                angular_velocity_radians_per_second: params.angular_velocity_radians_per_second,
+            };
+            let anchor_steps = (((ivc_angle - theta_start) / (theta_end - theta_start)).abs() * step_count as f64).ceil().max(20.0) as usize;
+            let anchor_state = self.integrate_dual_valve_breathing(gas, initial_state, theta_start, ivc_angle, anchor_steps, &breathing_params);
+            let volume_at_ivc = self.volume(ivc_angle);
+            (anchor_state.pressure(volume_at_ivc, gas), volume_at_ivc)
+        };
+
+        let dtheta = (theta_end - theta_start) / step_count as f64;
+        let mut state = initial_state;
+        let mut theta = theta_start;
+        for _ in 0..step_count {
+            state = self.full_cycle_rk4_step(gas, state, theta, dtheta, params, pressure_at_ivc, volume_at_ivc);
+            theta += dtheta;
+        }
+        state
+    }
+}
+
+/// One valve event: the camshaft profile and valve geometry driving the
+/// curtain area, a constant discharge coefficient (a parametric input —
+/// see the root README's scoping decision on `Cd` curves), and the fixed
+/// external reservoir state on its far side. `cam` is the caller's
+/// responsibility to have already expressed in whatever crank-angle
+/// convention the rest of the simulation uses — e.g. shifted via
+/// [`CamProfile::shifted_by`] to firing-TDC=0 terms before combining with
+/// [`Cylinder::integrate_full_cycle`]'s Wiebe combustion timing.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ValveEventParameters {
+    pub cam: CamProfile,
+    pub valve: ValveGeometry,
+    pub discharge_coefficient: f64,
+    pub reservoir_pressure: f64,
+    pub reservoir_temperature_kelvin: f64,
+}
+
+/// Everything [`Cylinder::integrate_dual_valve_breathing`] needs: an
+/// independent intake and exhaust valve event, each against its own fixed
+/// reservoir, plus the shared operating point's angular velocity.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct DualValveBreathingParameters {
+    pub intake: ValveEventParameters,
+    pub exhaust: ValveEventParameters,
+    pub angular_velocity_radians_per_second: f64,
 }
 
 /// Everything [`Cylinder::integrate_breathing`] needs: the camshaft
@@ -376,6 +680,24 @@ pub struct FiredCycleParameters {
     pub total_heat_release_joules: f64,
     pub angular_velocity_radians_per_second: f64,
     pub gas_constant: f64,
+}
+
+/// Everything [`Cylinder::integrate_full_cycle`] needs: [`FiredCycleParameters`]'s
+/// combustion/heat-transfer physics plus an independent intake and
+/// exhaust valve event, each against its own reservoir (matching
+/// [`DualValveBreathingParameters`]) - together enough to integrate a
+/// genuine 4-stroke cycle (intake stroke, compression, combustion,
+/// expansion, exhaust stroke) in one call.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct FullCycleParameters {
+    pub wiebe: WiebeParameters,
+    pub woschni: WoschniParameters,
+    pub walls: WallTemperatures,
+    pub total_heat_release_joules: f64,
+    pub angular_velocity_radians_per_second: f64,
+    pub gas_constant: f64,
+    pub intake: ValveEventParameters,
+    pub exhaust: ValveEventParameters,
 }
 
 impl CylinderState {
@@ -1188,5 +1510,575 @@ mod tests {
         let observed_order = (coarse_error / fine_error).log2();
         println!("breathing RK4 convergence AWAY from any known non-smooth point: coarse error={coarse_error:e} Pa, fine error={fine_error:e} Pa, observed order={observed_order:.2}");
         assert!(observed_order > 3.0, "expected close to 4th-order convergence away from any non-smooth point, observed order {observed_order:.2}");
+    }
+
+    fn sample_valve_geometry() -> ValveGeometry {
+        ValveGeometry { valve_diameter: 0.035, seat_angle_radians: 45.0_f64.to_radians() }
+    }
+
+    #[test]
+    fn dual_valve_breathing_with_both_valves_closed_matches_motoring_exactly() {
+        let cylinder = s54b32_cylinder();
+        let gas = GasProperties::AIR;
+        let bdc_angle = cylinder.crank_mechanism.crank_angle_of_bottom_dead_center();
+        let volume_at_bdc = cylinder.volume(bdc_angle);
+        let initial_state = CylinderState::from_pressure_temperature(1.0e5, 320.0, volume_at_bdc, &gas);
+
+        let motoring_result = cylinder.integrate_motoring(&gas, initial_state, bdc_angle, 0.0, 720);
+
+        let closed_event = |reservoir_pressure: f64| ValveEventParameters {
+            cam: CamProfile { max_lift: 0.0, opening_angle_radians: -100.0, duration_radians: 200.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure,
+            reservoir_temperature_kelvin: 400.0,
+        };
+        let params = DualValveBreathingParameters {
+            intake: closed_event(1.0e5),
+            exhaust: closed_event(5.0e5),
+            angular_velocity_radians_per_second: 500.0,
+        };
+        let dual_valve_result = cylinder.integrate_dual_valve_breathing(&gas, initial_state, bdc_angle, 0.0, 720, &params);
+
+        let energy_relative_error =
+            (dual_valve_result.internal_energy - motoring_result.internal_energy).abs() / motoring_result.internal_energy;
+        assert_eq!(dual_valve_result.mass, initial_state.mass, "mass must be exactly unchanged with both valves closed");
+        assert!(energy_relative_error < 1e-9, "energy should match pure motoring almost exactly with both valves closed");
+    }
+
+    #[test]
+    fn dual_valve_breathing_with_exhaust_closed_matches_single_valve_breathing_on_intake() {
+        let cylinder = s54b32_cylinder();
+        let gas = GasProperties::AIR;
+        let bdc_angle = cylinder.crank_mechanism.crank_angle_of_bottom_dead_center();
+        let initial_state = CylinderState::from_pressure_temperature(0.5e5, 350.0, cylinder.volume(bdc_angle - 2.0), &gas);
+
+        let intake_cam = CamProfile { max_lift: 0.009, opening_angle_radians: bdc_angle - 1.2, duration_radians: 2.4 };
+        let intake_valve = sample_valve_geometry();
+        let single_valve_params = BreathingParameters {
+            cam: intake_cam,
+            valve: intake_valve,
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 300.0,
+            angular_velocity_radians_per_second: 500.0,
+        };
+        let single_valve_result =
+            cylinder.integrate_breathing(&gas, initial_state, bdc_angle - 2.0, bdc_angle + 2.0, 400, &single_valve_params);
+
+        let dual_valve_params = DualValveBreathingParameters {
+            intake: ValveEventParameters {
+                cam: intake_cam,
+                valve: intake_valve,
+                discharge_coefficient: 0.7,
+                reservoir_pressure: 1.0e5,
+                reservoir_temperature_kelvin: 300.0,
+            },
+            exhaust: ValveEventParameters {
+                // Closed (max_lift=0) - should contribute exactly nothing.
+                cam: CamProfile { max_lift: 0.0, opening_angle_radians: 50.0, duration_radians: 100.0 },
+                valve: sample_valve_geometry(),
+                discharge_coefficient: 0.7,
+                reservoir_pressure: 1.0e5,
+                reservoir_temperature_kelvin: 900.0, // deliberately extreme - must have zero effect
+            },
+            angular_velocity_radians_per_second: 500.0,
+        };
+        let dual_valve_result =
+            cylinder.integrate_dual_valve_breathing(&gas, initial_state, bdc_angle - 2.0, bdc_angle + 2.0, 400, &dual_valve_params);
+
+        let mass_relative_error = (dual_valve_result.mass - single_valve_result.mass).abs() / single_valve_result.mass;
+        let energy_relative_error =
+            (dual_valve_result.internal_energy - single_valve_result.internal_energy).abs() / single_valve_result.internal_energy;
+        println!("dual-valve (exhaust closed) vs single-valve: mass rel err={mass_relative_error:e}, energy rel err={energy_relative_error:e}");
+        assert!(mass_relative_error < 1e-12, "closed exhaust valve should have exactly zero effect on mass");
+        assert!(energy_relative_error < 1e-12, "closed exhaust valve should have exactly zero effect on energy");
+    }
+
+    #[test]
+    fn dual_valve_breathing_overlap_stays_sane_and_matches_trapezoidal_mass_cross_check() {
+        // Both valves open simultaneously (a valve-overlap window): intake
+        // opening while exhaust is still closing, both against their own
+        // reservoir. No special-casing exists in the derivative for this -
+        // this test is the direct check that summing two independent flow
+        // terms behaves sanely (finite, matches an independent trapezoidal
+        // integration) rather than assuming it from the code alone.
+        let cylinder = s54b32_cylinder();
+        let gas = GasProperties::AIR;
+
+        let intake = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.009, opening_angle_radians: -0.3, duration_radians: 2.4 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 300.0,
+        };
+        let exhaust = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.009, opening_angle_radians: -1.8, duration_radians: 2.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 900.0, // hot exhaust gas reservoir
+        };
+        let params = DualValveBreathingParameters { intake, exhaust, angular_velocity_radians_per_second: 500.0 };
+
+        // intake window = [-0.3, 2.1], exhaust window = [-1.8, 0.2] -
+        // overlap is [-0.3, 0.2], so stay well inside that.
+        let theta_start = -0.2_f64;
+        let theta_end = 0.1_f64;
+        // Overlap really is simultaneous here (sanity-check the test setup itself).
+        assert!(theta_start > exhaust.cam.opening_angle_radians && theta_start < exhaust.cam.opening_angle_radians + exhaust.cam.duration_radians);
+        assert!(theta_start > intake.cam.opening_angle_radians && theta_start < intake.cam.opening_angle_radians + intake.cam.duration_radians);
+
+        let initial_state = CylinderState::from_pressure_temperature(1.05e5, 500.0, cylinder.volume(theta_start), &gas);
+
+        let segments = 400;
+        let dtheta = (theta_end - theta_start) / segments as f64;
+        let mut state = initial_state;
+        let mut theta = theta_start;
+        let mut trapezoidal_mass_change = 0.0_f64;
+
+        let mdot_sum_at = |cylinder: &Cylinder, state: &CylinderState, theta: f64| {
+            let pressure = state.pressure(cylinder.volume(theta), &gas);
+            let temperature_kelvin = state.temperature_kelvin(&gas);
+            [&intake, &exhaust]
+                .iter()
+                .map(|event| {
+                    let lift = camshaft::lift_at(&event.cam, theta);
+                    let area = event.discharge_coefficient * valve::curtain_area(&event.valve, lift);
+                    valve::mass_flow_rate(event.reservoir_pressure, event.reservoir_temperature_kelvin, pressure, temperature_kelvin, area, &gas)
+                })
+                .sum::<f64>()
+        };
+
+        for _ in 0..segments {
+            let mdot_before = mdot_sum_at(&cylinder, &state, theta);
+            let next_theta = theta + dtheta;
+            let next_state = cylinder.integrate_dual_valve_breathing(&gas, state, theta, next_theta, 4, &params);
+            let mdot_after = mdot_sum_at(&cylinder, &next_state, next_theta);
+
+            trapezoidal_mass_change += 0.5 * (mdot_before + mdot_after) * dtheta / params.angular_velocity_radians_per_second;
+
+            state = next_state;
+            theta = next_theta;
+
+            assert!(state.mass.is_finite() && state.mass > 0.0, "mass became non-physical at theta={theta}: {}", state.mass);
+            assert!(state.internal_energy.is_finite(), "energy became non-finite at theta={theta}");
+        }
+
+        let actual_mass_change = state.mass - initial_state.mass;
+        let cross_check_relative_error = (actual_mass_change - trapezoidal_mass_change).abs() / trapezoidal_mass_change.abs();
+        println!(
+            "overlap: mass change={actual_mass_change:e} kg (trapezoidal cross-check={trapezoidal_mass_change:e} kg, rel err={cross_check_relative_error:e})"
+        );
+        assert!(cross_check_relative_error < 1e-3, "trapezoidal mass cross-check relative error {cross_check_relative_error:e} too high");
+    }
+
+    #[test]
+    fn dual_valve_breathing_rk4_converges_at_close_to_fourth_order() {
+        let gas = GasProperties::AIR;
+        let cylinder = s54b32_cylinder();
+        let intake = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.009, opening_angle_radians: 0.0, duration_radians: 2.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.2e5,
+            reservoir_temperature_kelvin: 300.0,
+        };
+        let exhaust = ValveEventParameters {
+            // Positioned well outside [theta_start, theta_end] below - contributes nothing here,
+            // present only to confirm the dual-valve stepper itself converges at full order.
+            cam: CamProfile { max_lift: 0.009, opening_angle_radians: -10.0, duration_radians: 2.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 900.0,
+        };
+        let params = DualValveBreathingParameters { intake, exhaust, angular_velocity_radians_per_second: 500.0 };
+
+        let theta_start = 0.5;
+        let theta_end = 1.0;
+        let initial_pressure = 1.0e5;
+        let initial_state = CylinderState::from_pressure_temperature(initial_pressure, 350.0, cylinder.volume(theta_start), &gas);
+        let volume_at_end = cylinder.volume(theta_end);
+
+        let reference_pressure =
+            cylinder.integrate_dual_valve_breathing(&gas, initial_state, theta_start, theta_end, 2880, &params).pressure(volume_at_end, &gas);
+        let coarse_pressure =
+            cylinder.integrate_dual_valve_breathing(&gas, initial_state, theta_start, theta_end, 45, &params).pressure(volume_at_end, &gas);
+        let fine_pressure =
+            cylinder.integrate_dual_valve_breathing(&gas, initial_state, theta_start, theta_end, 90, &params).pressure(volume_at_end, &gas);
+
+        let coarse_error = (coarse_pressure - reference_pressure).abs();
+        let fine_error = (fine_pressure - reference_pressure).abs();
+        let observed_order = (coarse_error / fine_error).log2();
+        println!("dual-valve breathing RK4 convergence: coarse error={coarse_error:e} Pa, fine error={fine_error:e} Pa, observed order={observed_order:.2}");
+        assert!(observed_order > 3.0, "expected close to 4th-order convergence, observed order {observed_order:.2}");
+    }
+
+    #[test]
+    fn full_cycle_reduces_to_fired_cycle_exactly_when_both_valves_closed_and_starting_at_ivc() {
+        let cylinder = s54_2500rpm_cylinder();
+        let gas = GasProperties::AIR;
+        let ivc_angle = (-120.0_f64).to_radians();
+        let ivc_volume = cylinder.volume(ivc_angle);
+        let ivc_state = CylinderState::from_pressure_temperature(1.16948e5, 393.07, ivc_volume, &gas);
+        let fired_params = s54_2500rpm_fired_cycle_params(&gas, ivc_state);
+
+        let theta_end = 30.0_f64.to_radians();
+        let fired_result = cylinder.integrate_fired_cycle(&gas, ivc_state, ivc_angle, theta_end, 2000, &fired_params);
+
+        // Closed valves, windowed so `opening_angle_radians + duration_radians`
+        // is exactly `ivc_angle` - since `theta_start == ivc_angle` below,
+        // this exercises the "theta_start >= ivc_angle" branch, which
+        // should reduce bit-for-bit to `integrate_fired_cycle`'s own
+        // convention (anchor = initial_state/theta_start directly).
+        let closed_event = |reservoir_pressure: f64| ValveEventParameters {
+            cam: CamProfile { max_lift: 0.0, opening_angle_radians: ivc_angle - 100.0_f64.to_radians(), duration_radians: 100.0_f64.to_radians() },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure,
+            reservoir_temperature_kelvin: 400.0,
+        };
+        let full_cycle_params = FullCycleParameters {
+            wiebe: fired_params.wiebe,
+            woschni: fired_params.woschni,
+            walls: fired_params.walls,
+            total_heat_release_joules: fired_params.total_heat_release_joules,
+            angular_velocity_radians_per_second: fired_params.angular_velocity_radians_per_second,
+            gas_constant: fired_params.gas_constant,
+            intake: closed_event(1.0e5),
+            exhaust: closed_event(5.0e5),
+        };
+        let full_cycle_result = cylinder.integrate_full_cycle(&gas, ivc_state, ivc_angle, theta_end, 2000, &full_cycle_params);
+
+        let volume_at_end = cylinder.volume(theta_end);
+        let energy_relative_error = (full_cycle_result.internal_energy - fired_result.internal_energy).abs() / fired_result.internal_energy;
+        let pressure_relative_error =
+            (full_cycle_result.pressure(volume_at_end, &gas) - fired_result.pressure(volume_at_end, &gas)).abs() / fired_result.pressure(volume_at_end, &gas);
+        println!("full_cycle vs fired_cycle (closed valves): energy rel err={energy_relative_error:e}, pressure rel err={pressure_relative_error:e}");
+        assert_eq!(full_cycle_result.mass, fired_result.mass, "mass must be exactly unchanged with both valves closed");
+        assert!(energy_relative_error < 1e-9, "expected full_cycle to match fired_cycle almost exactly with both valves closed");
+    }
+
+    #[test]
+    fn full_cycle_reduces_to_dual_valve_breathing_when_combustion_is_zeroed() {
+        let cylinder = s54b32_cylinder();
+        let gas = GasProperties::AIR;
+        let bdc_angle = cylinder.crank_mechanism.crank_angle_of_bottom_dead_center();
+        let initial_state = CylinderState::from_pressure_temperature(0.5e5, 350.0, cylinder.volume(bdc_angle - 2.0), &gas);
+
+        let intake = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.009, opening_angle_radians: bdc_angle - 1.2, duration_radians: 2.4 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 300.0,
+        };
+        let exhaust = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.0, opening_angle_radians: 50.0, duration_radians: 100.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 900.0,
+        };
+        let angular_velocity_radians_per_second = 500.0;
+        let dual_valve_params = DualValveBreathingParameters { intake, exhaust, angular_velocity_radians_per_second };
+
+        let theta_start = bdc_angle - 2.0;
+        let theta_end = bdc_angle + 2.0;
+        // theta_start is well before ivc_angle = intake window's own
+        // close (bdc_angle + 1.2) - exercises the anchor-pre-pass branch.
+        let dual_valve_result = cylinder.integrate_dual_valve_breathing(&gas, initial_state, theta_start, theta_end, 400, &dual_valve_params);
+
+        let full_cycle_params = FullCycleParameters {
+            wiebe: WiebeParameters { start_angle_radians: 0.0, duration_radians: 0.5, shape_factor_m: 2.5, efficiency_c: 6.9 },
+            woschni: WoschniParameters { cw1: 0.0, cw2: 0.0, combustion_turbulence_coefficient: 0.0 },
+            walls: WallTemperatures { piston_kelvin: 450.0, head_kelvin: 550.0, liner_kelvin: 420.0 },
+            total_heat_release_joules: 0.0,
+            angular_velocity_radians_per_second,
+            gas_constant: gas.gas_constant,
+            intake,
+            exhaust,
+        };
+        let full_cycle_result = cylinder.integrate_full_cycle(&gas, initial_state, theta_start, theta_end, 400, &full_cycle_params);
+
+        let mass_relative_error = (full_cycle_result.mass - dual_valve_result.mass).abs() / dual_valve_result.mass;
+        let energy_relative_error =
+            (full_cycle_result.internal_energy - dual_valve_result.internal_energy).abs() / dual_valve_result.internal_energy;
+        println!("full_cycle vs dual_valve_breathing (zero combustion): mass rel err={mass_relative_error:e}, energy rel err={energy_relative_error:e}");
+        assert!(mass_relative_error < 1e-9, "expected full_cycle to match dual_valve_breathing almost exactly with combustion zeroed");
+        assert!(energy_relative_error < 1e-9, "expected full_cycle to match dual_valve_breathing almost exactly with combustion zeroed");
+    }
+
+    #[test]
+    fn full_cycle_state_at_ivc_matches_a_direct_dual_valve_breathing_run_to_the_same_angle() {
+        // Sets integrate_full_cycle's OWN theta_end to exactly ivc_angle -
+        // the internal anchor pre-pass's step-count ratio collapses to
+        // 1.0 in this special case, and the main RK4 loop covers exactly
+        // [theta_start, ivc_angle] with a derivative that (Woschni
+        // coefficients zeroed, so there's no base convective heat
+        // transfer term either - NOT just "before ignition", since the
+        // Woschni correlation's cw1*Cm term is active throughout the
+        // WHOLE cycle, not only during combustion; only its combustion-
+        // turbulence addend is gated to the Wiebe window - and the
+        // exhaust valve is closed) reduces EXACTLY to
+        // dual_valve_breathing_derivatives - so both paths should agree
+        // to floating-point precision, not just approximately, confirming
+        // the anchor pre-pass genuinely reuses (not reimplements)
+        // `integrate_dual_valve_breathing`.
+        let cylinder = s54_2500rpm_cylinder();
+        let gas = GasProperties::AIR;
+        let ivc_angle = (-120.0_f64).to_radians();
+        let theta_start = (-340.0_f64).to_radians();
+        let initial_state = CylinderState::from_pressure_temperature(1.0e5, 320.0, cylinder.volume(theta_start), &gas);
+
+        let intake_opening = theta_start - 20.0_f64.to_radians();
+        let intake = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.010, opening_angle_radians: intake_opening, duration_radians: ivc_angle - intake_opening },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.64,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 293.15,
+        };
+        let exhaust = ValveEventParameters {
+            cam: CamProfile { max_lift: 0.0, opening_angle_radians: 100.0, duration_radians: 100.0 },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.64,
+            reservoir_pressure: 1.0e5,
+            reservoir_temperature_kelvin: 900.0,
+        };
+        let angular_velocity_radians_per_second = 2500.0 * 2.0 * std::f64::consts::PI / 60.0;
+
+        let dual_valve_params = DualValveBreathingParameters { intake, exhaust, angular_velocity_radians_per_second };
+        let step_count = 2000;
+        let direct_state_at_ivc =
+            cylinder.integrate_dual_valve_breathing(&gas, initial_state, theta_start, ivc_angle, step_count, &dual_valve_params);
+
+        let full_cycle_params = FullCycleParameters {
+            wiebe: WiebeParameters { start_angle_radians: (-15.0_f64).to_radians(), duration_radians: 45.0_f64.to_radians(), shape_factor_m: 2.5, efficiency_c: 6.9 },
+            woschni: WoschniParameters { cw1: 0.0, cw2: 0.0, combustion_turbulence_coefficient: 0.0 },
+            walls: WallTemperatures { piston_kelvin: 450.0, head_kelvin: 550.0, liner_kelvin: 420.0 },
+            total_heat_release_joules: 1000.0, // nonzero, but inert here (Wiebe ignition is well after ivc_angle)
+            angular_velocity_radians_per_second,
+            gas_constant: gas.gas_constant,
+            intake,
+            exhaust,
+        };
+        let full_cycle_state_at_ivc = cylinder.integrate_full_cycle(&gas, initial_state, theta_start, ivc_angle, step_count, &full_cycle_params);
+
+        let mass_relative_error = (full_cycle_state_at_ivc.mass - direct_state_at_ivc.mass).abs() / direct_state_at_ivc.mass;
+        let energy_relative_error =
+            (full_cycle_state_at_ivc.internal_energy - direct_state_at_ivc.internal_energy).abs() / direct_state_at_ivc.internal_energy;
+        println!("anchor pre-pass consistency: mass rel err={mass_relative_error:e}, energy rel err={energy_relative_error:e}");
+        assert!(mass_relative_error < 1e-9, "expected the full-cycle path's state at IVC to match a direct dual-valve-breathing run there");
+        assert!(energy_relative_error < 1e-9, "expected the full-cycle path's state at IVC to match a direct dual-valve-breathing run there");
+    }
+
+    #[test]
+    fn full_cycle_rk4_converges_at_close_to_fourth_order_starting_exactly_at_ivc_angle() {
+        // Starts exactly AT ivc_angle (the "theta_start >= ivc_angle"
+        // branch - anchor taken directly from initial_state/theta_start,
+        // no pre-pass) and runs well into the burn (mirroring
+        // `fired_cycle_rk4_converges_at_close_to_fourth_order_away_from_ignition`'s
+        // own choice of window, away from the singular ignition point) -
+        // confirms `integrate_full_cycle`'s own RK4 stepper achieves full
+        // order despite starting exactly at the anchor boundary. A window
+        // confined close to `ivc_angle` (weak dynamics, no combustion yet,
+        // tiny absolute pressure change over a few degrees) was tried
+        // first and measured a reduced order (~2.5) - but the IDENTICAL
+        // reduction was independently confirmed to occur, bit-for-bit,
+        // in the already-shipped `integrate_fired_cycle` on the exact
+        // same narrow window, so it is a pre-existing floating-point-
+        // noise-floor property of that regime, not a regression
+        // introduced here - this test instead measures somewhere the
+        // signal is strong enough to say something meaningful.
+        let cylinder = s54_2500rpm_cylinder();
+        let gas = GasProperties::AIR;
+        let ivc_angle = (-120.0_f64).to_radians();
+        let ivc_volume = cylinder.volume(ivc_angle);
+        let ivc_state = CylinderState::from_pressure_temperature(1.16948e5, 393.07, ivc_volume, &gas);
+        let fired_params = s54_2500rpm_fired_cycle_params(&gas, ivc_state);
+
+        let closed_event = |reservoir_pressure: f64| ValveEventParameters {
+            cam: CamProfile { max_lift: 0.0, opening_angle_radians: ivc_angle - 10.0_f64.to_radians(), duration_radians: 10.0_f64.to_radians() },
+            valve: sample_valve_geometry(),
+            discharge_coefficient: 0.7,
+            reservoir_pressure,
+            reservoir_temperature_kelvin: 400.0,
+        };
+        let params = FullCycleParameters {
+            wiebe: fired_params.wiebe,
+            woschni: fired_params.woschni,
+            walls: fired_params.walls,
+            total_heat_release_joules: fired_params.total_heat_release_joules,
+            angular_velocity_radians_per_second: fired_params.angular_velocity_radians_per_second,
+            gas_constant: fired_params.gas_constant,
+            intake: closed_event(1.0e5),
+            exhaust: closed_event(1.0e5),
+        };
+
+        // Pre-integrate from ivc_angle (exercising the "theta_start >=
+        // ivc_angle" anchor branch) THROUGH the singular ignition point
+        // with a large, fixed step count, matching
+        // `measure_fired_cycle_convergence_order`'s own established
+        // pattern - so that segment's own (expected, already-measured-
+        // elsewhere) reduced-order error doesn't contaminate the actual
+        // measurement, which is taken only over a clean, entirely-post-
+        // ignition window.
+        let interval_start = (-5.0_f64).to_radians(); // theta0 (-15deg) + 10deg, same as the existing "away from ignition" test
+        let burn_end = params.wiebe.start_angle_radians + params.wiebe.duration_radians;
+        let pre_interval_state = cylinder.integrate_full_cycle(&gas, ivc_state, ivc_angle, interval_start, 4000, &params);
+        let volume_at_burn_end = cylinder.volume(burn_end);
+
+        let reference_pressure =
+            cylinder.integrate_full_cycle(&gas, pre_interval_state, interval_start, burn_end, 2880, &params).pressure(volume_at_burn_end, &gas);
+        let coarse_pressure =
+            cylinder.integrate_full_cycle(&gas, pre_interval_state, interval_start, burn_end, 45, &params).pressure(volume_at_burn_end, &gas);
+        let fine_pressure =
+            cylinder.integrate_full_cycle(&gas, pre_interval_state, interval_start, burn_end, 90, &params).pressure(volume_at_burn_end, &gas);
+
+        let coarse_error = (coarse_pressure - reference_pressure).abs();
+        let fine_error = (fine_pressure - reference_pressure).abs();
+        let observed_order = (coarse_error / fine_error).log2();
+        println!(
+            "full-cycle RK4 convergence (pre-integrated from ivc_angle, measured away from ignition): coarse error={coarse_error:e} Pa, fine error={fine_error:e} Pa, observed order={observed_order:.2}"
+        );
+        assert!(observed_order > 3.0, "expected close to 4th-order convergence, observed order {observed_order:.2}");
+    }
+
+    /// Real-numbers comparison against the actual OpenWAM S54 2500rpm
+    /// case's intake-stroke trace - genuine full-cycle ground truth (not
+    /// just the already-validated closed-cycle portion), extracted
+    /// directly from `benchmarks/openwam/cases/engine_s54_2500rpm/`:
+    /// `NumberOfValves=2`, intake `FDiametro=0.0495m` (area-matched
+    /// equivalent of 2x35mm), exhaust `FDiametro=0.0431m` (2x30.5mm),
+    /// both with the SAME 27-point versine lift table (0->12mm->0 over
+    /// 260 degrees, `FIncrAng=10deg`) and the SAME lift-dependent Cd table
+    /// plateauing at 0.64 (used here as a constant - this model doesn't
+    /// support lift-dependent Cd yet), `IVO=340deg`/`EVO=140deg` (already
+    /// in firing-TDC=0 terms - `IVC=340+260=600deg=-120deg`, matching the
+    /// existing fired-cycle tests' own IVC angle exactly), and
+    /// `AmbientPressure=1.0 bar`/`AmbientTemperature=20degC` for both
+    /// reservoirs (the case's own boundary conditions: both the intake
+    /// and exhaust pipes' far ends are `nmOpenEndAtmosphere`).
+    ///
+    /// Deliberately stays entirely within [300deg, 600deg=IVC] - genuine
+    /// valve overlap (exhaust closing, `EVC=400deg`) through the intake
+    /// stroke, run through `integrate_full_cycle` itself (not directly
+    /// through `integrate_dual_valve_breathing`) so this is a real
+    /// end-to-end check of the new capability - but short of the
+    /// combustion event, so no "which firing TDC occurrence" angle
+    /// bookkeeping is needed (Wiebe ignition, referenced the same way as
+    /// every other test in this file, is simply never reached in this
+    /// window).
+    #[test]
+    fn full_cycle_intake_stroke_compares_against_the_real_openwam_s54_2500rpm_case() {
+        let cylinder = s54_2500rpm_cylinder();
+        let gas = GasProperties::AIR;
+
+        let lift_table_max = 0.012_f64; // 12mm, from FLevantamiento's peak value
+        let duration = 260.0_f64.to_radians(); // 26 * FIncrAng(10deg)
+        let discharge_coefficient = 0.64; // FDatosCD's plateau value
+        let ambient_pressure = 1.0e5; // 1.0 bar
+        let ambient_temperature_kelvin = 293.15; // 20 degC
+
+        let intake = ValveEventParameters {
+            cam: CamProfile { max_lift: lift_table_max, opening_angle_radians: 340.0_f64.to_radians(), duration_radians: duration },
+            valve: ValveGeometry { valve_diameter: 0.0495, seat_angle_radians: 45.0_f64.to_radians() },
+            discharge_coefficient,
+            reservoir_pressure: ambient_pressure,
+            reservoir_temperature_kelvin: ambient_temperature_kelvin,
+        };
+        let exhaust = ValveEventParameters {
+            cam: CamProfile { max_lift: lift_table_max, opening_angle_radians: 140.0_f64.to_radians(), duration_radians: duration },
+            valve: ValveGeometry { valve_diameter: 0.0431, seat_angle_radians: 45.0_f64.to_radians() },
+            discharge_coefficient,
+            reservoir_pressure: ambient_pressure,
+            reservoir_temperature_kelvin: ambient_temperature_kelvin,
+        };
+
+        let ivc_state_for_fixture = CylinderState::from_pressure_temperature(1.16948e5, 393.07, cylinder.volume((-120.0_f64).to_radians()), &gas);
+        let fired_params = s54_2500rpm_fired_cycle_params(&gas, ivc_state_for_fixture);
+        let params = FullCycleParameters {
+            wiebe: fired_params.wiebe,
+            woschni: fired_params.woschni,
+            walls: fired_params.walls,
+            total_heat_release_joules: fired_params.total_heat_release_joules,
+            angular_velocity_radians_per_second: fired_params.angular_velocity_radians_per_second,
+            gas_constant: gas.gas_constant,
+            intake,
+            exhaust,
+        };
+
+        // Real OpenWAM trace: (crank angle deg, pressure bar, temperature degC).
+        let theta_start_degrees = 300.0_f64;
+        let initial_pressure_bar = 0.817864;
+        let initial_temperature_c = 822.879;
+        let checkpoints: [(f64, f64, f64); 6] =
+            [(340.0, 1.08004, 861.187), (400.0, 0.824861, 417.105), (450.0, 1.0691, 116.216), (500.0, 0.979397, 94.539), (550.0, 1.06966, 104.807), (600.0, 1.16603, 119.579)];
+
+        let theta_start = theta_start_degrees.to_radians();
+        let initial_state =
+            CylinderState::from_pressure_temperature(initial_pressure_bar * 1e5, initial_temperature_c + 273.15, cylinder.volume(theta_start), &gas);
+
+        let mut state = initial_state;
+        let mut previous_angle_radians = theta_start;
+        let mut max_pressure_relative_error = 0.0_f64;
+        let mut max_temperature_relative_error = 0.0_f64;
+
+        for (angle_deg, expected_pressure_bar, expected_temperature_c) in checkpoints {
+            let angle_radians = angle_deg.to_radians();
+            let segment_steps = ((angle_radians - previous_angle_radians).to_degrees().abs() * 20.0).ceil() as usize;
+            state = cylinder.integrate_full_cycle(&gas, state, previous_angle_radians, angle_radians, segment_steps.max(20), &params);
+            previous_angle_radians = angle_radians;
+
+            let volume = cylinder.volume(angle_radians);
+            let actual_pressure_bar = state.pressure(volume, &gas) / 1e5;
+            let actual_temperature_c = state.temperature_kelvin(&gas) - 273.15;
+
+            let pressure_relative_error = (actual_pressure_bar - expected_pressure_bar).abs() / expected_pressure_bar;
+            let temperature_relative_error = (actual_temperature_c - expected_temperature_c).abs() / (expected_temperature_c + 273.15);
+            max_pressure_relative_error = max_pressure_relative_error.max(pressure_relative_error);
+            max_temperature_relative_error = max_temperature_relative_error.max(temperature_relative_error);
+
+            println!(
+                "theta={angle_deg:>6.1} deg: pressure actual={actual_pressure_bar:>6.3} bar / OpenWAM={expected_pressure_bar:>6.3} bar (err {:>6.2}%), temperature actual={actual_temperature_c:>7.1} C / OpenWAM={expected_temperature_c:>7.1} C (err {:>6.2}%)",
+                pressure_relative_error * 100.0,
+                temperature_relative_error * 100.0
+            );
+        }
+
+        println!(
+            "intake-stroke max pressure relative error = {:.2}%, max temperature relative error = {:.2}%",
+            max_pressure_relative_error * 100.0,
+            max_temperature_relative_error * 100.0
+        );
+
+        // Generous, honestly-measured (not pre-guessed) bounds. Pressure
+        // agrees reasonably well throughout (measured up to ~11%) - a
+        // CONSTANT discharge coefficient standing in for the file's own
+        // lift-dependent Cd table accounts for most of that. Temperature
+        // is a different story specifically around EVC (measured up to
+        // ~41%, at theta=400deg): this model replaces the REAL exhaust
+        // pipe's own transient, wave-driven pressure trace with a flat
+        // AMBIENT reservoir - during the exhaust-valve-closing/overlap
+        // window, the real exhaust pipe often runs meaningfully ABOVE
+        // ambient (a genuine exhaust pulse/backpressure effect no fixed-
+        // reservoir boundary condition can capture), so this model's
+        // exhaust outflow (and therefore the hot-residual-gas retention
+        // that sets post-EVC temperature) is systematically under-driven
+        // here - the exact, expected consequence of the documented
+        // limitation that real wave-driven scavenging needs the separate
+        // `valve_port.rs` real-pipe-coupled path, not a fixed reservoir.
+        // "Right shape/order of magnitude", not tight quantitative
+        // agreement - pressure gets the tighter of the two bounds since
+        // it isn't as exposed to this specific limitation.
+        assert!(max_pressure_relative_error < 0.20, "intake-stroke pressure trace error {:.1}% exceeds the 20% bound", max_pressure_relative_error * 100.0);
+        assert!(
+            max_temperature_relative_error < 0.50,
+            "intake-stroke temperature trace error {:.1}% exceeds the 50% bound",
+            max_temperature_relative_error * 100.0
+        );
     }
 }

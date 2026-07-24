@@ -143,7 +143,7 @@ mod tests {
         assert!((shifted.opening_angle_radians - (profile.opening_angle_radians + offset)).abs() < 1e-12);
 
         // The lift curve is identical, just relabeled at a shifted angle.
-        for offset_deg in [0.0, 30.0, 110.0, 219.9] {
+        for offset_deg in [0.0_f64, 30.0, 110.0, 219.9] {
             let theta = profile.opening_angle_radians + offset_deg.to_radians();
             let original_lift = lift_at(&profile, theta);
             let shifted_lift = lift_at(&shifted, theta + offset);

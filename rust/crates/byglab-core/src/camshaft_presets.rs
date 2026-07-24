@@ -303,4 +303,48 @@ mod tests {
         // approximation for overall duration/lift, not lobe shape.
         assert!(max_discrepancy_degrees < 25.0, "discrepancy {max_discrepancy_degrees:.2} deg is larger than expected even for an approximate versine fit");
     }
+
+    /// The gas-exchange-TDC to firing-TDC shift is NOT the same sign for
+    /// intake and exhaust events - see `CamProfile::shifted_by`'s own doc
+    /// comment for why. Confirms the asymmetry directly against two real
+    /// grinds' own published angles (not just "some shift works"): shift
+    /// exhaust by `+2*pi`, intake by `-2*pi`, and check the results land
+    /// at physically ordinary EVO/EVC/IVO/IVC angles relative to firing
+    /// TDC (firing TDC=0, BDC=180, gas-exchange TDC=360, BDC=540,
+    /// next firing TDC=720).
+    #[test]
+    fn tdc_shift_is_opposite_sign_for_intake_and_exhaust_and_lands_on_physically_ordinary_angles() {
+        use std::f64::consts::PI;
+
+        // Exhaust: SCHRICK_0415A1960_01, opening=-252deg, closing=+44deg
+        // (Schrick's own gas-exchange-TDC=0 convention). Exhaust happens
+        // AFTER combustion, so its relevant gas-exchange TDC occurrence
+        // is ahead in the same cycle: shift = +2*pi.
+        let exhaust_profile = SCHRICK_0415A1960_01.cam_profile(0).shifted_by(2.0 * PI);
+        let evo_degrees = exhaust_profile.opening_angle_radians.to_degrees();
+        let evc_degrees = (exhaust_profile.opening_angle_radians + exhaust_profile.duration_radians).to_degrees();
+        assert!(
+            (90.0..180.0).contains(&evo_degrees),
+            "EVO={evo_degrees:.1} deg should fall shortly before BDC (180 deg) of the power stroke"
+        );
+        assert!(
+            (360.0..450.0).contains(&evc_degrees),
+            "EVC={evc_degrees:.1} deg should fall shortly after gas-exchange TDC (360 deg)"
+        );
+
+        // Intake: SCHRICK_0415E1800_00, opening=-8deg, closing=272deg.
+        // Intake happens BEFORE combustion, so its relevant occurrence is
+        // behind in the same cycle: shift = -2*pi.
+        let intake_profile = SCHRICK_0415E1800_00.cam_profile(0).shifted_by(-2.0 * PI);
+        let ivo_degrees = intake_profile.opening_angle_radians.to_degrees();
+        let ivc_degrees = (intake_profile.opening_angle_radians + intake_profile.duration_radians).to_degrees();
+        assert!(
+            (-450.0..-360.0).contains(&ivo_degrees),
+            "IVO={ivo_degrees:.1} deg should fall shortly before gas-exchange TDC (-360 deg)"
+        );
+        assert!(
+            (-180.0..0.0).contains(&ivc_degrees),
+            "IVC={ivc_degrees:.1} deg should fall after BDC (-180 deg) of the intake stroke, before the next firing TDC"
+        );
+    }
 }
