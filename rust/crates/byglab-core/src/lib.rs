@@ -47,9 +47,21 @@
 //!   prediction (error shrinking ~linearly with disturbance amplitude), a
 //!   quantified (not just sanity-checked) N=2 regression against
 //!   `Junction`'s own exact HLLC solve, and a measured (not assumed-zero)
-//!   energy-conservation residual — two independently-wrong closures were
+//!   energy-conservation residual (~0.14% small-amplitude, ~15.8% at a
+//!   realistic exhaust-pulse ratio) — two independently-wrong closures were
 //!   tried and disproved by direct numerical scans before landing on this
 //!   one; see the module's own doc comment for what failed and why.
+//! - [`lossy_branch_junction`] — closes that energy gap for the specific
+//!   case Gordon Blair worked out in closed form: a 3-way (only) branch
+//!   with a real angle-dependent pressure loss and a genuinely separate,
+//!   jointly-solved stagnation-enthalpy energy equation
+//!   ([`lossy_branch_junction::LossyBranchJunction`]/
+//!   [`lossy_branch_junction::resolve_lossy_branch_junction`]). The
+//!   one-supplier/two-supplied case matches all 4 of Blair's own published
+//!   test cases; the two-supplier/one-supplied case has no published
+//!   reference and is validated only for internal consistency. Rerunning
+//!   `branch_junction`'s own "realistic exhaust pulse" scenario through
+//!   this model drops the energy residual from ~15.8% to ~3e-7.
 //! - [`solver`] — the explicit time-stepping driver.
 //! - [`case`] — the serializable public API ([`case::PipeCaseConfig`]/
 //!   [`case::PipeCaseResult`]/[`case::run_pipe_case`]) that `byglab-cli` and
@@ -136,6 +148,7 @@ pub use case::{run_pipe_case, PipeCaseConfig, PipeCaseResult, PipeResult, PipeSp
 pub use crank_mechanism::CrankMechanism;
 pub use cylinder::{Cylinder, CylinderState};
 pub use gas::{ConservedState, Flux, GasProperties, PrimitiveState};
+pub use lossy_branch_junction::{resolve_lossy_branch_junction, LossyBranchJunction};
 pub use mesh::{Cell, Mesh};
 pub use network::{ExternalPortFlux, Junction, PipeEnd, PipeEndRef, PipeNetwork};
 pub use pipe::Pipe;

@@ -23,6 +23,27 @@ pub struct CamProfile {
     pub duration_radians: f64,
 }
 
+impl CamProfile {
+    /// Returns a copy shifted by a constant crank-angle offset - the whole
+    /// event moves together, `duration_radians`/`max_lift` unchanged.
+    ///
+    /// Needed because real ingested cam data (`camshaft_presets.rs`) is
+    /// referenced to *gas-exchange* TDC = 0, while [`crate::combustion`]'s
+    /// Wiebe timing is referenced to *firing* TDC = 0 - combining the two
+    /// in one simulation requires re-expressing one convention in terms
+    /// of the other first. The needed shift is `+-2*pi`, NOT the same
+    /// sign for intake and exhaust: exhaust events happen *after*
+    /// combustion (their own gas-exchange TDC occurrence is ahead, so
+    /// `+2*pi`), intake events happen *before* combustion (their relevant
+    /// occurrence is behind, so `-2*pi`) - confirmed against real Schrick
+    /// numbers and independently cross-checked against the OpenWAM S54
+    /// case file (which already encodes valve timing directly in
+    /// firing-TDC terms) in `camshaft_presets.rs`'s own tests.
+    pub fn shifted_by(&self, offset_radians: f64) -> CamProfile {
+        CamProfile { opening_angle_radians: self.opening_angle_radians + offset_radians, ..*self }
+    }
+}
+
 /// Valve lift at `crank_angle_from_tdc_radians`: zero outside
 /// `[opening, opening+duration]`, otherwise
 /// `0.5 * max_lift * (1 - cos(2*pi*(theta-opening)/duration))` — a
@@ -108,6 +129,28 @@ mod tests {
         while theta <= profile.opening_angle_radians + profile.duration_radians {
             assert!(lift_at(&profile, theta) >= 0.0, "negative lift at theta={theta}");
             theta += 1.0_f64.to_radians();
+        }
+    }
+
+    #[test]
+    fn shifted_by_moves_the_whole_event_and_leaves_shape_unchanged() {
+        let profile = sample_profile();
+        let offset = 2.0 * PI;
+        let shifted = profile.shifted_by(offset);
+
+        assert_eq!(shifted.max_lift, profile.max_lift);
+        assert_eq!(shifted.duration_radians, profile.duration_radians);
+        assert!((shifted.opening_angle_radians - (profile.opening_angle_radians + offset)).abs() < 1e-12);
+
+        // The lift curve is identical, just relabeled at a shifted angle.
+        for offset_deg in [0.0, 30.0, 110.0, 219.9] {
+            let theta = profile.opening_angle_radians + offset_deg.to_radians();
+            let original_lift = lift_at(&profile, theta);
+            let shifted_lift = lift_at(&shifted, theta + offset);
+            assert!(
+                (original_lift - shifted_lift).abs() < 1e-12,
+                "theta_offset={offset_deg}deg: expected {original_lift}, got {shifted_lift}"
+            );
         }
     }
 }
